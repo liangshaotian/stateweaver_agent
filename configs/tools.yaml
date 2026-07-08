@@ -1,0 +1,19 @@
+skills:
+  - name: file_reader
+    tags: [file, read, text]
+    risk_level: low
+  - name: local_file_search
+    tags: [file, search, keyword]
+    risk_level: low
+  - name: table_analyzer
+    tags: [table, csv, tsv, stats]
+    risk_level: low
+  - name: calculator
+    tags: [math, compute]
+    risk_level: low
+  - name: format_converter
+    tags: [format, markdown, json]
+    risk_level: low
+  - name: evidence_checker
+    tags: [evidence, verify]
+    risk_level: medium

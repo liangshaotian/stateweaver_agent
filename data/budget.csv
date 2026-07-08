@@ -1,0 +1,6 @@
+item,category,cost
+server_rental,infrastructure,1200
+gpu_hours,compute,1800
+annotation,data,900
+testing,engineering,600
+documentation,engineering,300

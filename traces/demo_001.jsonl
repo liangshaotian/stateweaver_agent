@@ -1,0 +1,272 @@
+{"ts": "2026-07-03T18:25:02", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T18:25:02", "stage": "RETRIEVE_MEMORY", "memory_count": 2}
+{"ts": "2026-07-03T18:25:02", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0008}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.003}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.002}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.002}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.002}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.004}
+{"ts": "2026-07-03T18:25:02", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T18:25:02", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0}
+{"ts": "2026-07-03T18:25:02", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T18:25:02", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_3"}
+{"ts": "2026-07-03T18:25:02", "stage": "DONE", "status": "success", "elapsed_sec": 0.035}
+{"ts": "2026-07-03T18:39:47", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T18:39:47", "stage": "RETRIEVE_MEMORY", "memory_count": 3}
+{"ts": "2026-07-03T18:39:47", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.002}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.001}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.002}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.002}
+{"ts": "2026-07-03T18:39:47", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T18:39:47", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0}
+{"ts": "2026-07-03T18:39:47", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T18:39:47", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_4"}
+{"ts": "2026-07-03T18:39:47", "stage": "DONE", "status": "success", "elapsed_sec": 0.027}
+{"ts": "2026-07-03T18:40:31", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T18:40:31", "stage": "RETRIEVE_MEMORY", "memory_count": 4}
+{"ts": "2026-07-03T18:40:31", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T18:40:31", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T18:40:31", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T18:40:31", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T18:40:31", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_5"}
+{"ts": "2026-07-03T18:40:31", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T19:41:11", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T19:41:11", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T19:41:11", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:11", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T19:41:11", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T19:41:11", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T19:41:11", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_6"}
+{"ts": "2026-07-03T19:41:11", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T19:41:19", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T19:41:19", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T19:41:19", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T19:41:19", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T19:41:19", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T19:41:19", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_7"}
+{"ts": "2026-07-03T19:41:19", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T19:41:19", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T19:41:19", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T19:41:19", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T19:41:19", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T19:41:19", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T19:41:19", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T19:41:19", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_8"}
+{"ts": "2026-07-03T19:41:19", "stage": "DONE", "status": "success", "elapsed_sec": 0.015}
+{"ts": "2026-07-03T20:53:32", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T20:53:32", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T20:53:32", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T20:53:32", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T20:53:32", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:53:32", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T20:53:32", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_9"}
+{"ts": "2026-07-03T20:53:32", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T20:53:33", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T20:53:33", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T20:53:33", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:33", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T20:53:33", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:53:33", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T20:53:33", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_10"}
+{"ts": "2026-07-03T20:53:33", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T20:53:34", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T20:53:34", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T20:53:34", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T20:53:34", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T20:53:34", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:53:34", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T20:53:34", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_11"}
+{"ts": "2026-07-03T20:53:34", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T20:54:20", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T20:54:20", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T20:54:20", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:54:20", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T20:54:20", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:54:20", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T20:54:20", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_12"}
+{"ts": "2026-07-03T20:54:20", "stage": "DONE", "status": "success", "elapsed_sec": 0.013}
+{"ts": "2026-07-03T20:59:50", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T20:59:50", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T20:59:50", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-03T20:59:50", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T20:59:50", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T20:59:50", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T20:59:50", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_13"}
+{"ts": "2026-07-03T20:59:50", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-03T21:08:11", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-03T21:08:11", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-03T21:08:11", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-03T21:08:11", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-03T21:08:11", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-03T21:08:11", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-03T21:08:11", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_14"}
+{"ts": "2026-07-03T21:08:11", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-06T10:39:22", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-06T10:39:22", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-06T10:39:22", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-06T10:39:22", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-06T10:39:22", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T10:39:22", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-06T10:39:22", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_15"}
+{"ts": "2026-07-06T10:39:22", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-06T10:39:23", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-06T10:39:23", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-06T10:39:23", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:39:23", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-06T10:39:23", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T10:39:23", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-06T10:39:23", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_16"}
+{"ts": "2026-07-06T10:39:23", "stage": "DONE", "status": "success", "elapsed_sec": 0.015}
+{"ts": "2026-07-06T10:44:48", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-06T10:44:48", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-06T10:44:48", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-06T10:44:48", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-06T10:44:48", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T10:44:48", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-06T10:44:48", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_17"}
+{"ts": "2026-07-06T10:44:48", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}
+{"ts": "2026-07-06T14:53:57", "stage": "INIT", "selected_tools": ["calculator", "evidence_checker", "file_reader", "format_converter", "local_file_search", "table_analyzer"], "schema_size": 6}
+{"ts": "2026-07-06T14:53:57", "stage": "RETRIEVE_MEMORY", "memory_count": 5}
+{"ts": "2026-07-06T14:53:57", "stage": "PLAN", "plan_steps": ["read_docs", "analyze_tables", "search_evidence", "write_outputs", "verify_evidence"]}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "file_reader", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0003}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "table_analyzer", "status": "ok", "elapsed_sec": 0.0002}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "local_file_search", "status": "ok", "elapsed_sec": 0.0004}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "format_converter", "status": "ok", "elapsed_sec": 0.0005}
+{"ts": "2026-07-06T14:53:57", "stage": "WRITE_OUTPUTS", "markdown_path": "outputs/demo_001/report.md", "json_path": "outputs/demo_001/summary.json"}
+{"ts": "2026-07-06T14:53:57", "stage": "TOOL_CALL", "tool": "evidence_checker", "status": "ok", "elapsed_sec": 0.0001}
+{"ts": "2026-07-06T14:53:57", "stage": "VERIFY", "passed": true, "checks": {"markdown_exists": true, "json_exists": true, "markdown_nonempty": true, "json_nonempty": true}, "evidence_status": "ok"}
+{"ts": "2026-07-06T14:53:57", "stage": "SAVE_MEMORY", "memory_id": "episodic_demo_001_18"}
+{"ts": "2026-07-06T14:53:57", "stage": "DONE", "status": "success", "elapsed_sec": 0.014}

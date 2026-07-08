@@ -1,0 +1,30 @@
+{
+  "conversation_id": "demo_001",
+  "user_input": "请读取 docs/bid_requirements.md、docs/meeting_notes.md、data/budget.csv 和 data/staff.tsv，生成中文 Markdown 报告和 JSON 摘要。报告需要包含项目需求、预算统计、人员工时、关键风险、人员建议和证据来源，所有关键结论都要能追溯到本地文件或表格数据。",
+  "allowed_files": [
+    "data/budget.csv",
+    "data/staff.tsv",
+    "docs/bid_requirements.md",
+    "docs/meeting_notes.md"
+  ],
+  "output_requirements": {
+    "formats": [
+      "markdown",
+      "json"
+    ],
+    "markdown_path": "outputs/demo_001/report.md",
+    "json_path": "outputs/demo_001/summary.json"
+  },
+  "budget": {
+    "max_rounds": 12,
+    "max_tool_calls": 20,
+    "max_seconds": 180
+  },
+  "runtime_options": {
+    "enable_memory": true,
+    "enable_checkpoint": true,
+    "enable_validation": true,
+    "enable_recovery": true,
+    "enable_dynamic_toolset": true
+  }
+}

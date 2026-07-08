@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StateWeaver Agent Console</title>
+  <style>
+    :root {
+      --bg: #edf5fb;
+      --panel: #ffffff;
+      --line: #b8d7ea;
+      --ink: #1f2a37;
+      --muted: #64748b;
+      --blue: #2563a6;
+      --green: #2f8b62;
+      --orange: #d97821;
+      --purple: #6b5bc2;
+      --red: #ba3b3b;
+      --soft-blue: #e7f1fb;
+      --soft-green: #e6f6ed;
+      --soft-orange: #fff0dc;
+      --soft-purple: #f0edff;
+      --shadow: 0 8px 24px rgba(31, 42, 55, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    }
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: #f9fcff;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+    .brand p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .notice {
+      min-width: 260px;
+      max-width: 460px;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px solid #bdd8eb;
+      border-radius: 6px;
+      background: var(--soft-blue);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .notice.error {
+      border-color: #e2a3a3;
+      background: #fff1f1;
+      color: var(--red);
+    }
+    button {
+      border: 1px solid #9fc7df;
+      background: #fff;
+      color: var(--blue);
+      min-height: 36px;
+      padding: 0 13px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+    button:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 360px minmax(520px, 1fr) 430px;
+      gap: 14px;
+      padding: 14px;
+      height: calc(100vh - 72px);
+    }
+    main > section:nth-of-type(1) {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    main > section:nth-of-type(2) {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    main > section:nth-of-type(3) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 0;
+    }
+    .section-head {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid #d5e8f4;
+      background: #fbfdff;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .body {
+      padding: 14px;
+      overflow: auto;
+      height: calc(100% - 46px);
+    }
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border: 1px solid #c7ddeb;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #162033;
+      background: #fbfdff;
+    }
+    .config-form {
+      display: grid;
+      gap: 12px;
+    }
+    .field {
+      border: 1px solid #d4e4ef;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfdff;
+    }
+    .field-title {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .task-input {
+      min-height: 150px;
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      font-size: 12px;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      color: #344054;
+      font-size: 12px;
+    }
+    .check-row input {
+      width: 15px;
+      height: 15px;
+    }
+    .limit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .limit-grid label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .limit-grid input {
+      width: 100%;
+      min-height: 32px;
+      border: 1px solid #c7ddeb;
+      border-radius: 6px;
+      padding: 0 8px;
+      color: #162033;
+      background: #fff;
+    }
+    .advanced-config {
+      border: 1px solid #d4e4ef;
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 8px 10px 10px;
+    }
+    .advanced-config summary {
+      cursor: pointer;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .advanced-config textarea {
+      margin-top: 9px;
+      min-height: 180px;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .metric {
+      border: 1px solid #d4e4ef;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfdff;
+    }
+    .metric strong {
+      display: block;
+      font-size: 21px;
+      color: var(--blue);
+      margin-bottom: 5px;
+    }
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      align-items: center;
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .stage {
+      min-height: 48px;
+      border: 1px solid #b7cde0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      background: #fff;
+    }
+    .stage.done {
+      color: var(--blue);
+      border-color: var(--blue);
+      background: var(--soft-blue);
+    }
+    .stage.error {
+      color: var(--red);
+      border-color: var(--red);
+      background: #fff2f2;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    main > section:nth-of-type(2) .status-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    main > section:nth-of-type(2) .pipeline {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    main > section:nth-of-type(2) .cards {
+      grid-template-columns: 1fr;
+    }
+    .card {
+      border: 1px solid #d4e4ef;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfdff;
+    }
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--blue);
+    }
+    .card p, .card li {
+      color: #344054;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 10px 10px 0;
+      background: #fbfdff;
+    }
+    .tab {
+      min-height: 31px;
+      padding: 0 10px;
+      border: 1px solid #c7ddeb;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab.active {
+      color: var(--blue);
+      border-color: var(--blue);
+      background: var(--soft-blue);
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid #d4e4ef;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e5eef9;
+      min-height: 260px;
+      font-size: 12px;
+      line-height: 1.55;
+      overflow: auto;
+    }
+    .trace-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .trace-item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 8px;
+      border: 1px solid #d4e4ef;
+      border-radius: 8px;
+      padding: 9px;
+      background: #fbfdff;
+      font-size: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      border-radius: 5px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--blue);
+      background: var(--soft-blue);
+      border: 1px solid #bdd8eb;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .file-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .file-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #d4e4ef;
+      border-radius: 6px;
+      padding: 8px 9px;
+      font-size: 12px;
+      background: #fbfdff;
+    }
+    .ok { color: var(--green); font-weight: 800; }
+    .bad { color: var(--red); font-weight: 800; }
+    @media (max-width: 1160px) {
+      main { grid-template-columns: 1fr; height: auto; }
+      main > section:nth-of-type(1),
+      main > section:nth-of-type(2),
+      main > section:nth-of-type(3) {
+        grid-column: auto;
+        grid-row: auto;
+      }
+      section { min-height: 480px; }
+      .pipeline { grid-template-columns: repeat(3, 1fr); }
+      .status-grid { grid-template-columns: repeat(2, 1fr); }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>StateWeaver Agent Console</h1>
+      <p>状态驱动 · 动态工具编译 · 可追踪输出 · 分层记忆</p>
+    </div>
+    <div class="toolbar">
+      <div id="notice" class="notice">页面已加载，等待操作</div>
+      <button id="refreshBtn">刷新</button>
+      <button id="saveBtn">保存配置</button>
+      <button id="runBtn" class="primary">运行 Agent</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="section-head">
+        <h2>任务配置</h2>
+        <span class="badge">runtime_input.json</span>
+      </div>
+      <div class="body">
+        <p class="hint">用下面的表单配置任务即可；需要精细调试时再展开高级 JSON。保存后运行 Agent，会生成中文报告与 JSON 摘要。</p>
+        <div class="config-form">
+          <label class="field">
+            <span class="field-title">任务目标</span>
+            <textarea id="taskInput" class="task-input" spellcheck="false"></textarea>
+          </label>
+          <div class="field">
+            <span class="field-title">允许读取的文件</span>
+            <label class="check-row"><input type="checkbox" class="fileChoice" value="docs/bid_requirements.md"> 项目需求文档 docs/bid_requirements.md</label>
+            <label class="check-row"><input type="checkbox" class="fileChoice" value="docs/meeting_notes.md"> 组内会议记录 docs/meeting_notes.md</label>
+            <label class="check-row"><input type="checkbox" class="fileChoice" value="data/budget.csv"> 预算表 data/budget.csv</label>
+            <label class="check-row"><input type="checkbox" class="fileChoice" value="data/staff.tsv"> 人员工时表 data/staff.tsv</label>
+          </div>
+          <div class="field">
+            <span class="field-title">输出内容</span>
+            <label class="check-row"><input type="checkbox" class="formatChoice" value="markdown"> 中文 Markdown 报告</label>
+            <label class="check-row"><input type="checkbox" class="formatChoice" value="json"> JSON 摘要数据</label>
+          </div>
+          <div class="field">
+            <span class="field-title">运行限制</span>
+            <div class="limit-grid">
+              <label>最多轮次<input id="maxRoundsInput" type="number" min="1"></label>
+              <label>最多工具调用<input id="maxToolCallsInput" type="number" min="1"></label>
+              <label>最长秒数<input id="maxSecondsInput" type="number" min="10"></label>
+            </div>
+          </div>
+          <details class="advanced-config">
+            <summary>高级 JSON 配置</summary>
+            <textarea id="configEditor" spellcheck="false"></textarea>
+          </details>
+        </div>
+        <div class="file-list" id="fileList"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>运行监控</h2>
+        <span class="badge" id="runStatus">idle</span>
+      </div>
+      <div class="body">
+        <div class="status-grid">
+          <div class="metric"><strong id="budgetMetric">-</strong><span>预算总额</span></div>
+          <div class="metric"><strong id="hoursMetric">-</strong><span>人员工时</span></div>
+          <div class="metric"><strong id="riskMetric">-</strong><span>风险等级</span></div>
+          <div class="metric"><strong id="traceMetric">-</strong><span>Trace记录</span></div>
+        </div>
+        <div class="pipeline" id="pipeline"></div>
+        <div class="cards">
+          <div class="card">
+            <h3>B1-B5 模块闭环</h3>
+            <p>B1 维护状态机和 trace，B5 召回记忆，B4 生成计划，B3 编译工具并校验参数，B2 执行具体 Skill，最终由 Verifier 检查输出文件。</p>
+          </div>
+          <div class="card">
+            <h3>质量验收点</h3>
+            <ul>
+              <li>生成 report.md 与 summary.json</li>
+              <li>trace 包含 INIT、PLAN、TOOL_CALL、VERIFY、DONE</li>
+              <li>summary 中预算为 4800，工时为 122</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>动态工具集</h3>
+            <p id="toolsetText">等待运行。</p>
+          </div>
+          <div class="card">
+            <h3>记忆状态</h3>
+            <p id="memoryText">等待读取。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>结果查看</h2>
+        <span class="badge">outputs / traces</span>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-file="outputs/demo_001/report.md">报告</button>
+        <button class="tab" data-file="outputs/demo_001/summary.json">摘要</button>
+        <button class="tab" data-file="traces/demo_001.jsonl">轨迹</button>
+        <button class="tab" data-file="checkpoints/demo_001.json">断点</button>
+        <button class="tab" data-file="configs/memory.json">记忆</button>
+      </div>
+      <div class="body">
+        <div id="traceView" class="trace-list" style="display:none"></div>
+        <pre id="fileContent">loading...</pre>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const stages = ["INIT", "RETRIEVE_MEMORY", "PLAN", "TOOL_CALL", "WRITE_OUTPUTS", "VERIFY", "SAVE_MEMORY", "DONE"];
+    const editor = document.getElementById("configEditor");
+    const runBtn = document.getElementById("runBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const fileContent = document.getElementById("fileContent");
+    const traceView = document.getElementById("traceView");
+    const notice = document.getElementById("notice");
+    const taskInput = document.getElementById("taskInput");
+    const maxRoundsInput = document.getElementById("maxRoundsInput");
+    const maxToolCallsInput = document.getElementById("maxToolCallsInput");
+    const maxSecondsInput = document.getElementById("maxSecondsInput");
+
+    function qs(sel) { return document.querySelector(sel); }
+    function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
+    function notify(text, isError=false) {
+      notice.textContent = text;
+      notice.classList.toggle("error", isError);
+    }
+    async function getJSON(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(await res.text());
+      return await res.json();
+    }
+    async function postJSON(url, body) {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "request failed");
+      return data;
+    }
+    function renderPipeline(trace) {
+      const done = new Set(trace.map(r => r.stage));
+      const el = document.getElementById("pipeline");
+      el.innerHTML = "";
+      stages.forEach(stage => {
+        const div = document.createElement("div");
+        div.className = "stage" + (done.has(stage) ? " done" : "");
+        div.textContent = stage;
+        el.appendChild(div);
+      });
+    }
+    function renderFiles(status) {
+      const el = document.getElementById("fileList");
+      el.innerHTML = "";
+      Object.entries(status.files || {}).forEach(([key, info]) => {
+        const row = document.createElement("div");
+        row.className = "file-row";
+        row.innerHTML = `<span>${key}: ${info.path}</span><span class="${info.exists ? "ok" : "bad"}">${info.exists ? info.size + " B" : "missing"}</span>`;
+        el.appendChild(row);
+      });
+    }
+    function renderTrace(trace) {
+      traceView.innerHTML = "";
+      trace.slice().reverse().forEach(r => {
+        const item = document.createElement("div");
+        item.className = "trace-item";
+        const payload = {...r};
+        delete payload.ts;
+        delete payload.stage;
+        item.innerHTML = `<span class="badge">${r.stage}</span><span>${r.ts || ""}<br>${escapeHtml(JSON.stringify(payload, null, 2))}</span>`;
+        traceView.appendChild(item);
+      });
+    }
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function applyConfigToSimpleForm(cfg) {
+      taskInput.value = cfg.user_input || "";
+      const allowed = new Set(cfg.allowed_files || []);
+      qsa(".fileChoice").forEach(input => input.checked = allowed.has(input.value));
+      const formats = new Set((cfg.output_requirements && cfg.output_requirements.formats) || []);
+      qsa(".formatChoice").forEach(input => input.checked = formats.has(input.value));
+      maxRoundsInput.value = cfg.budget?.max_rounds ?? 12;
+      maxToolCallsInput.value = cfg.budget?.max_tool_calls ?? 20;
+      maxSecondsInput.value = cfg.budget?.max_seconds ?? 180;
+    }
+    function readConfigFromEditor() {
+      try {
+        return JSON.parse(editor.value || "{}");
+      } catch {
+        return {};
+      }
+    }
+    function syncSimpleFormToEditor() {
+      const cfg = readConfigFromEditor();
+      cfg.conversation_id = cfg.conversation_id || "demo_001";
+      cfg.user_input = taskInput.value.trim();
+      cfg.allowed_files = qsa(".fileChoice").filter(input => input.checked).map(input => input.value);
+      cfg.output_requirements = cfg.output_requirements || {};
+      cfg.output_requirements.formats = qsa(".formatChoice").filter(input => input.checked).map(input => input.value);
+      cfg.output_requirements.markdown_path = cfg.output_requirements.markdown_path || "outputs/demo_001/report.md";
+      cfg.output_requirements.json_path = cfg.output_requirements.json_path || "outputs/demo_001/summary.json";
+      cfg.budget = cfg.budget || {};
+      cfg.budget.max_rounds = Number(maxRoundsInput.value || 12);
+      cfg.budget.max_tool_calls = Number(maxToolCallsInput.value || 20);
+      cfg.budget.max_seconds = Number(maxSecondsInput.value || 180);
+      cfg.runtime_options = cfg.runtime_options || {
+        enable_memory: true,
+        enable_checkpoint: true,
+        enable_validation: true,
+        enable_recovery: true,
+        enable_dynamic_toolset: true
+      };
+      editor.value = JSON.stringify(cfg, null, 2);
+      return cfg;
+    }
+    async function loadStatus() {
+      notify("正在刷新状态...");
+      const status = await getJSON("/api/status");
+      renderPipeline(status.trace || []);
+      renderFiles(status);
+      renderTrace(status.trace || []);
+      qs("#traceMetric").textContent = status.trace ? status.trace.length : 0;
+      const init = (status.trace || []).find(r => r.stage === "INIT");
+      qs("#toolsetText").textContent = init ? (init.selected_tools || []).join(" / ") : "尚未运行";
+      await loadFile(document.querySelector(".tab.active").dataset.file);
+      await loadSummaryMetrics();
+      await loadMemoryText();
+      notify("状态已刷新");
+    }
+    async function loadConfig() {
+      const cfg = await getJSON("/api/config");
+      editor.value = JSON.stringify(cfg, null, 2);
+      applyConfigToSimpleForm(cfg);
+      notify("配置已加载");
+    }
+    async function loadFile(path) {
+      try {
+        notify("正在读取 " + path);
+        const data = await getJSON("/api/file?path=" + encodeURIComponent(path));
+        fileContent.textContent = data.content;
+        notify("已读取 " + path);
+      } catch (err) {
+        fileContent.textContent = String(err.message || err);
+        notify("读取失败：" + String(err.message || err), true);
+      }
+    }
+    async function loadSummaryMetrics() {
+      try {
+        const data = await getJSON("/api/file?path=" + encodeURIComponent("outputs/demo_001/summary.json"));
+        const summary = JSON.parse(data.content);
+        qs("#budgetMetric").textContent = summary.total_budget_cost ?? "-";
+        qs("#hoursMetric").textContent = summary.total_staff_hours ?? "-";
+        qs("#riskMetric").textContent = summary.risk_level ?? "-";
+      } catch {
+        qs("#budgetMetric").textContent = "-";
+        qs("#hoursMetric").textContent = "-";
+        qs("#riskMetric").textContent = "-";
+      }
+    }
+    async function loadMemoryText() {
+      try {
+        const data = await getJSON("/api/file?path=" + encodeURIComponent("configs/memory.json"));
+        const mem = JSON.parse(data.content);
+        qs("#memoryText").textContent = `${mem.records.length} records, latest: ${mem.records[mem.records.length - 1]?.kind || "none"}`;
+      } catch {
+        qs("#memoryText").textContent = "读取失败";
+      }
+    }
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", async () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const isTrace = tab.dataset.file.includes("trace");
+        traceView.style.display = isTrace ? "flex" : "none";
+        fileContent.style.display = isTrace ? "none" : "block";
+        await loadFile(tab.dataset.file);
+      });
+    });
+    saveBtn.addEventListener("click", async () => {
+      try {
+        notify("正在保存配置...");
+        const cfg = syncSimpleFormToEditor();
+        await postJSON("/api/config", cfg);
+        await loadStatus();
+        notify("配置保存成功");
+      } catch (err) {
+        notify("保存失败：" + String(err.message || err), true);
+      }
+    });
+    runBtn.addEventListener("click", async () => {
+      runBtn.disabled = true;
+      saveBtn.disabled = true;
+      qs("#runStatus").textContent = "running";
+      notify("正在运行 Agent...");
+      try {
+        const cfg = syncSimpleFormToEditor();
+        await postJSON("/api/config", cfg);
+        const data = await postJSON("/api/run", {});
+        qs("#runStatus").textContent = data.result.status;
+        await loadStatus();
+        notify("运行完成：" + data.result.status);
+      } catch (err) {
+        qs("#runStatus").textContent = "error";
+        fileContent.style.display = "block";
+        traceView.style.display = "none";
+        fileContent.textContent = String(err.message || err);
+        notify("运行失败：" + String(err.message || err), true);
+      } finally {
+        runBtn.disabled = false;
+        saveBtn.disabled = false;
+      }
+    });
+    refreshBtn.addEventListener("click", async () => {
+      try {
+        notify("正在刷新页面数据...");
+        await loadConfig();
+        await loadStatus();
+        notify("刷新完成");
+      } catch (err) {
+        notify("刷新失败：" + String(err.message || err), true);
+      }
+    });
+    [taskInput, maxRoundsInput, maxToolCallsInput, maxSecondsInput, ...qsa(".fileChoice"), ...qsa(".formatChoice")].forEach(el => {
+      el.addEventListener("input", syncSimpleFormToEditor);
+      el.addEventListener("change", syncSimpleFormToEditor);
+    });
+    (async function init() {
+      try {
+        renderPipeline([]);
+        await loadConfig();
+        await loadStatus();
+      } catch (err) {
+        notify("初始化失败：请确认 SSH 端口转发仍在运行。详细错误：" + String(err.message || err), true);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+{
+  "records": [
+    {
+      "id": "pref_001",
+      "kind": "preference",
+      "content": "User prefers concise Markdown reports with a table first and bullet-point risks.",
+      "tags": [
+        "report",
+        "markdown",
+        "preference"
+      ],
+      "confidence": 0.82,
+      "source_trace": "seed"
+    },
+    {
+      "id": "proc_001",
+      "kind": "procedural",
+      "content": "For CSV analysis tasks, inspect headers first, then compute totals and averages, then validate JSON fields.",
+      "tags": [
+        "csv",
+        "table",
+        "analysis"
+      ],
+      "confidence": 0.88,
+      "source_trace": "seed"
+    },
+    {
+      "id": "episodic_demo_001_3",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T18:25:02"
+    },
+    {
+      "id": "episodic_demo_001_4",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T18:39:47"
+    },
+    {
+      "id": "episodic_demo_001_5",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T18:40:31"
+    },
+    {
+      "id": "episodic_demo_001_6",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T19:41:11"
+    },
+    {
+      "id": "episodic_demo_001_7",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T19:41:19"
+    },
+    {
+      "id": "episodic_demo_001_8",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T19:41:19"
+    },
+    {
+      "id": "episodic_demo_001_9",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T20:53:32"
+    },
+    {
+      "id": "episodic_demo_001_10",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T20:53:33"
+    },
+    {
+      "id": "episodic_demo_001_11",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T20:53:34"
+    },
+    {
+      "id": "episodic_demo_001_12",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T20:54:20"
+    },
+    {
+      "id": "episodic_demo_001_13",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T20:59:50"
+    },
+    {
+      "id": "episodic_demo_001_14",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T21:08:11"
+    },
+    {
+      "id": "episodic_demo_001_15",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-06T10:39:22"
+    },
+    {
+      "id": "episodic_demo_001_16",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-06T10:39:23"
+    },
+    {
+      "id": "episodic_demo_001_17",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-06T10:44:48"
+    },
+    {
+      "id": "episodic_demo_001_18",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-06T14:53:57"
+    }
+  ]
+}

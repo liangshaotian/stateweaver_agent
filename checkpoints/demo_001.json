@@ -1,0 +1,664 @@
+{
+  "conversation_id": "demo_001",
+  "stage": "DONE",
+  "messages": [],
+  "tool_calls": [
+    {
+      "tool": "file_reader",
+      "arguments": {
+        "path": "docs/bid_requirements.md"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "path": "docs/bid_requirements.md",
+          "text": "# Bid Requirements\n\nThe project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.\n\nMandatory deliverables:\n\n- A Markdown report with project requirements, budget summary, risks and staffing suggestions.\n- A JSON summary containing total budget, expected cost and risk level.\n- Evidence lines that show which local files support each major conclusion.\n\nConstraints:\n\n- The workflow should run locally.\n- All generated outputs should be reproducible.\n- The process should save intermediate traces for review.\n",
+          "chars": 625
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0002
+    },
+    {
+      "tool": "file_reader",
+      "arguments": {
+        "path": "docs/meeting_notes.md"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "path": "docs/meeting_notes.md",
+          "text": "# Meeting Notes\n\nThe group decided to implement five modules: runtime orchestration, skill functions, tool schema and router, local model decision, and memory management.\n\nDiscussion highlights:\n\n- The runtime should keep messages and trace files.\n- Tools should return a unified result format.\n- The router should choose a small task-specific tool set.\n- Memory should store user preference, successful tool paths, and failure notes.\n- A demo should include document reading, table analysis, evidence checking and report generation.\n\nRisks:\n\n- Local model function calling may be unstable.\n- GPU resources may not always be available.\n- File paths and table headers may be inconsistent.\n",
+          "chars": 688
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0001
+    },
+    {
+      "tool": "table_analyzer",
+      "arguments": {
+        "path": "data/budget.csv"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "path": "data/budget.csv",
+          "rows": 5,
+          "columns": [
+            "item",
+            "category",
+            "cost"
+          ],
+          "numeric": {
+            "cost": {
+              "count": 5,
+              "sum": 4800.0,
+              "mean": 960.0,
+              "min": 300.0,
+              "max": 1800.0
+            }
+          },
+          "sample": [
+            {
+              "item": "server_rental",
+              "category": "infrastructure",
+              "cost": "1200"
+            },
+            {
+              "item": "gpu_hours",
+              "category": "compute",
+              "cost": "1800"
+            },
+            {
+              "item": "annotation",
+              "category": "data",
+              "cost": "900"
+            }
+          ]
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0003
+    },
+    {
+      "tool": "table_analyzer",
+      "arguments": {
+        "path": "data/staff.tsv"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "path": "data/staff.tsv",
+          "rows": 4,
+          "columns": [
+            "name",
+            "role",
+            "hours"
+          ],
+          "numeric": {
+            "hours": {
+              "count": 4,
+              "sum": 122.0,
+              "mean": 30.5,
+              "min": 26.0,
+              "max": 42.0
+            }
+          },
+          "sample": [
+            {
+              "name": "Liang Shaotian",
+              "role": "leader-runtime-integration",
+              "hours": "42"
+            },
+            {
+              "name": "Yang Jinxin",
+              "role": "tool-description-router",
+              "hours": "26"
+            },
+            {
+              "name": "Liu Guangkuo",
+              "role": "skill-functions",
+              "hours": "28"
+            }
+          ]
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0002
+    },
+    {
+      "tool": "local_file_search",
+      "arguments": {
+        "paths": [
+          "data/budget.csv",
+          "data/staff.tsv",
+          "docs/bid_requirements.md",
+          "docs/meeting_notes.md"
+        ],
+        "query": "requires deliverables workflow local"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "query": "requires deliverables workflow local",
+          "hits": [
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 3,
+              "text": "The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.",
+              "score": 2
+            },
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 13,
+              "text": "- The workflow should run locally.",
+              "score": 2
+            },
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 5,
+              "text": "Mandatory deliverables:",
+              "score": 1
+            },
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 9,
+              "text": "- Evidence lines that show which local files support each major conclusion.",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 3,
+              "text": "The group decided to implement five modules: runtime orchestration, skill functions, tool schema and router, local model decision, and memory management.",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 15,
+              "text": "- Local model function calling may be unstable.",
+              "score": 1
+            }
+          ],
+          "count": 6
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0004
+    },
+    {
+      "tool": "local_file_search",
+      "arguments": {
+        "paths": [
+          "data/budget.csv",
+          "data/staff.tsv",
+          "docs/bid_requirements.md",
+          "docs/meeting_notes.md"
+        ],
+        "query": "budget cost"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "query": "budget cost",
+          "hits": [
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 8,
+              "text": "- A JSON summary containing total budget, expected cost and risk level.",
+              "score": 2
+            },
+            {
+              "path": "data/budget.csv",
+              "line": 1,
+              "text": "item,category,cost",
+              "score": 1
+            },
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 3,
+              "text": "The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.",
+              "score": 1
+            },
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 7,
+              "text": "- A Markdown report with project requirements, budget summary, risks and staffing suggestions.",
+              "score": 1
+            }
+          ],
+          "count": 4
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0004
+    },
+    {
+      "tool": "local_file_search",
+      "arguments": {
+        "paths": [
+          "data/budget.csv",
+          "data/staff.tsv",
+          "docs/bid_requirements.md",
+          "docs/meeting_notes.md"
+        ],
+        "query": "risks unstable gpu"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "query": "risks unstable gpu",
+          "hits": [
+            {
+              "path": "data/budget.csv",
+              "line": 3,
+              "text": "gpu_hours,compute,1800",
+              "score": 1
+            },
+            {
+              "path": "docs/bid_requirements.md",
+              "line": 7,
+              "text": "- A Markdown report with project requirements, budget summary, risks and staffing suggestions.",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 13,
+              "text": "Risks:",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 15,
+              "text": "- Local model function calling may be unstable.",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 16,
+              "text": "- GPU resources may not always be available.",
+              "score": 1
+            }
+          ],
+          "count": 5
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0004
+    },
+    {
+      "tool": "local_file_search",
+      "arguments": {
+        "paths": [
+          "data/budget.csv",
+          "data/staff.tsv",
+          "docs/bid_requirements.md",
+          "docs/meeting_notes.md"
+        ],
+        "query": "modules runtime memory tools"
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "query": "modules runtime memory tools",
+          "hits": [
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 3,
+              "text": "The group decided to implement five modules: runtime orchestration, skill functions, tool schema and router, local model decision, and memory management.",
+              "score": 3
+            },
+            {
+              "path": "data/staff.tsv",
+              "line": 2,
+              "text": "Liang Shaotian\tleader-runtime-integration\t42",
+              "score": 1
+            },
+            {
+              "path": "data/staff.tsv",
+              "line": 5,
+              "text": "Wang Xuanhao\tmemory-storage-retrieval\t26",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 7,
+              "text": "- The runtime should keep messages and trace files.",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 8,
+              "text": "- Tools should return a unified result format.",
+              "score": 1
+            },
+            {
+              "path": "docs/meeting_notes.md",
+              "line": 10,
+              "text": "- Memory should store user preference, successful tool paths, and failure notes.",
+              "score": 1
+            }
+          ],
+          "count": 6
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0004
+    },
+    {
+      "tool": "format_converter",
+      "arguments": {
+        "markdown_path": "outputs/demo_001/report.md",
+        "json_path": "outputs/demo_001/summary.json",
+        "payload": {
+          "markdown": "# StateWeaver Agent 中文运行报告\n\n## 1. 项目需求概述\n本项目需要构建一个可本地运行、可复现、可追踪的文档与数据分析 Agent。系统需要读取本地需求文档、会议记录和数据表格，并生成带证据来源的结构化输出。\n\n## 2. 预算统计结果\n- 预算总额：4800.0\n- 预算表记录数：5\n- 统计方式：由表格分析工具读取 data/budget.csv，并对 cost 字段求和。\n\n## 3. 人员工时统计\n- 计划总工时：122.0\n- 人员表记录数：4\n- 统计方式：由表格分析工具读取 data/staff.tsv，并对 hours 字段求和。\n\n## 4. 关键风险与建议\n- 综合风险等级：中等\n- 本地小模型的工具调用格式可能不稳定，需要保留规则降级和解析重试机制。\n- GPU 或模型服务可能临时不可用，因此系统需要支持离线规则 Planner。\n- 文件路径、表头或数据格式可能不一致，需要通过路径检查和表格字段校验降低失败概率。\n\n## 5. 证据来源\n### requirements\n- docs/bid_requirements.md:3 The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.\n- docs/bid_requirements.md:13 - The workflow should run locally.\n- docs/bid_requirements.md:5 Mandatory deliverables:\n### budget\n- docs/bid_requirements.md:8 - A JSON summary containing total budget, expected cost and risk level.\n- data/budget.csv:1 item,category,cost\n- docs/bid_requirements.md:3 The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.\n### risks\n- data/budget.csv:3 gpu_hours,compute,1800\n- docs/bid_requirements.md:7 - A Markdown report with project requirements, budget summary, risks and staffing suggestions.\n- docs/meeting_notes.md:13 Risks:\n### staffing\n- docs/meeting_notes.md:3 The group decided to implement five modules: runtime orchestration, skill functions, tool schema and router, local model decision, and memory management.\n- data/staff.tsv:2 Liang Shaotian\tleader-runtime-integration\t42\n- data/staff.tsv:5 Wang Xuanhao\tmemory-storage-retrieval\t26\n\n## 6. 召回记忆\n- procedural: For CSV analysis tasks, inspect headers first, then compute totals and averages, then validate JSON fields.\n- preference: User prefers concise Markdown reports with a table first and bullet-point risks.\n- episodic: Completed local document and table analysis with traceable outputs.\n- episodic: Completed local document and table analysis with traceable outputs.\n- episodic: Completed local document and table analysis with traceable outputs.\n",
+          "summary": {
+            "conversation_id": "demo_001",
+            "total_budget_cost": 4800.0,
+            "total_staff_hours": 122.0,
+            "risk_level": "中等",
+            "evidence_counts": {
+              "requirements": 3,
+              "budget": 3,
+              "risks": 3,
+              "staffing": 3
+            },
+            "tables": {
+              "data/budget.csv": {
+                "path": "data/budget.csv",
+                "rows": 5,
+                "columns": [
+                  "item",
+                  "category",
+                  "cost"
+                ],
+                "numeric": {
+                  "cost": {
+                    "count": 5,
+                    "sum": 4800.0,
+                    "mean": 960.0,
+                    "min": 300.0,
+                    "max": 1800.0
+                  }
+                },
+                "sample": [
+                  {
+                    "item": "server_rental",
+                    "category": "infrastructure",
+                    "cost": "1200"
+                  },
+                  {
+                    "item": "gpu_hours",
+                    "category": "compute",
+                    "cost": "1800"
+                  },
+                  {
+                    "item": "annotation",
+                    "category": "data",
+                    "cost": "900"
+                  }
+                ]
+              },
+              "data/staff.tsv": {
+                "path": "data/staff.tsv",
+                "rows": 4,
+                "columns": [
+                  "name",
+                  "role",
+                  "hours"
+                ],
+                "numeric": {
+                  "hours": {
+                    "count": 4,
+                    "sum": 122.0,
+                    "mean": 30.5,
+                    "min": 26.0,
+                    "max": 42.0
+                  }
+                },
+                "sample": [
+                  {
+                    "name": "Liang Shaotian",
+                    "role": "leader-runtime-integration",
+                    "hours": "42"
+                  },
+                  {
+                    "name": "Yang Jinxin",
+                    "role": "tool-description-router",
+                    "hours": "26"
+                  },
+                  {
+                    "name": "Liu Guangkuo",
+                    "role": "skill-functions",
+                    "hours": "28"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "markdown_path": "outputs/demo_001/report.md",
+          "json_path": "outputs/demo_001/summary.json",
+          "markdown_chars": 2150
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": [
+          {
+            "type": "file_created",
+            "path": "outputs/demo_001/report.md"
+          },
+          {
+            "type": "file_created",
+            "path": "outputs/demo_001/summary.json"
+          }
+        ]
+      },
+      "elapsed_sec": 0.0005
+    },
+    {
+      "tool": "evidence_checker",
+      "arguments": {
+        "report": "# StateWeaver Agent 中文运行报告\n\n## 1. 项目需求概述\n本项目需要构建一个可本地运行、可复现、可追踪的文档与数据分析 Agent。系统需要读取本地需求文档、会议记录和数据表格，并生成带证据来源的结构化输出。\n\n## 2. 预算统计结果\n- 预算总额：4800.0\n- 预算表记录数：5\n- 统计方式：由表格分析工具读取 data/budget.csv，并对 cost 字段求和。\n\n## 3. 人员工时统计\n- 计划总工时：122.0\n- 人员表记录数：4\n- 统计方式：由表格分析工具读取 data/staff.tsv，并对 hours 字段求和。\n\n## 4. 关键风险与建议\n- 综合风险等级：中等\n- 本地小模型的工具调用格式可能不稳定，需要保留规则降级和解析重试机制。\n- GPU 或模型服务可能临时不可用，因此系统需要支持离线规则 Planner。\n- 文件路径、表头或数据格式可能不一致，需要通过路径检查和表格字段校验降低失败概率。\n\n## 5. 证据来源\n### requirements\n- docs/bid_requirements.md:3 The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.\n- docs/bid_requirements.md:13 - The workflow should run locally.\n- docs/bid_requirements.md:5 Mandatory deliverables:\n### budget\n- docs/bid_requirements.md:8 - A JSON summary containing total budget, expected cost and risk level.\n- data/budget.csv:1 item,category,cost\n- docs/bid_requirements.md:3 The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.\n### risks\n- data/budget.csv:3 gpu_hours,compute,1800\n- docs/bid_requirements.md:7 - A Markdown report with project requirements, budget summary, risks and staffing suggestions.\n- docs/meeting_notes.md:13 Risks:\n### staffing\n- docs/meeting_notes.md:3 The group decided to implement five modules: runtime orchestration, skill functions, tool schema and router, local model decision, and memory management.\n- data/staff.tsv:2 Liang Shaotian\tleader-runtime-integration\t42\n- data/staff.tsv:5 Wang Xuanhao\tmemory-storage-retrieval\t26\n\n## 6. 召回记忆\n- procedural: For CSV analysis tasks, inspect headers first, then compute totals and averages, then validate JSON fields.\n- preference: User prefers concise Markdown reports with a table first and bullet-point risks.\n- episodic: Completed local document and table analysis with traceable outputs.\n- episodic: Completed local document and table analysis with traceable outputs.\n- episodic: Completed local document and table analysis with traceable outputs.\n",
+        "evidence": {
+          "requirements": [
+            "docs/bid_requirements.md:3 The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports.",
+            "docs/bid_requirements.md:13 - The workflow should run locally.",
+            "docs/bid_requirements.md:5 Mandatory deliverables:"
+          ],
+          "budget": [
+            "docs/bid_requirements.md:8 - A JSON summary containing total budget, expected cost and risk level.",
+            "data/budget.csv:1 item,category,cost",
+            "docs/bid_requirements.md:3 The project requires a local document and data analysis assistant. The system must read local files, summarize requirements, analyze budget tables, and generate traceable reports."
+          ],
+          "risks": [
+            "data/budget.csv:3 gpu_hours,compute,1800",
+            "docs/bid_requirements.md:7 - A Markdown report with project requirements, budget summary, risks and staffing suggestions.",
+            "docs/meeting_notes.md:13 Risks:"
+          ],
+          "staffing": [
+            "docs/meeting_notes.md:3 The group decided to implement five modules: runtime orchestration, skill functions, tool schema and router, local model decision, and memory management.",
+            "data/staff.tsv:2 Liang Shaotian\tleader-runtime-integration\t42",
+            "data/staff.tsv:5 Wang Xuanhao\tmemory-storage-retrieval\t26"
+          ]
+        }
+      },
+      "status": "ok",
+      "result": {
+        "status": "ok",
+        "output": {
+          "valid": true,
+          "missing_evidence": [],
+          "checked_sections": [
+            "requirements",
+            "budget",
+            "risks",
+            "staffing"
+          ]
+        },
+        "error": null,
+        "metadata": {},
+        "state_changes": []
+      },
+      "elapsed_sec": 0.0001
+    }
+  ],
+  "errors": [],
+  "started_at": "2026-07-06T14:53:57",
+  "selected_memory": [
+    {
+      "id": "proc_001",
+      "kind": "procedural",
+      "content": "For CSV analysis tasks, inspect headers first, then compute totals and averages, then validate JSON fields.",
+      "tags": [
+        "csv",
+        "table",
+        "analysis"
+      ],
+      "confidence": 0.88,
+      "source_trace": "seed",
+      "score": 1.88
+    },
+    {
+      "id": "pref_001",
+      "kind": "preference",
+      "content": "User prefers concise Markdown reports with a table first and bullet-point risks.",
+      "tags": [
+        "report",
+        "markdown",
+        "preference"
+      ],
+      "confidence": 0.82,
+      "source_trace": "seed",
+      "score": 1.82
+    },
+    {
+      "id": "episodic_demo_001_3",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T18:25:02",
+      "score": 0.76
+    },
+    {
+      "id": "episodic_demo_001_4",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T18:39:47",
+      "score": 0.76
+    },
+    {
+      "id": "episodic_demo_001_5",
+      "kind": "episodic",
+      "content": "Completed local document and table analysis with traceable outputs.",
+      "tags": [
+        "demo",
+        "document",
+        "table",
+        "trace"
+      ],
+      "confidence": 0.76,
+      "source_trace": "demo_001",
+      "created_at": "2026-07-03T18:40:31",
+      "score": 0.76
+    }
+  ],
+  "plan": [
+    {
+      "id": "read_docs",
+      "tool": "file_reader",
+      "targets": [
+        "docs/bid_requirements.md",
+        "docs/meeting_notes.md"
+      ],
+      "purpose": "collect requirements and risks"
+    },
+    {
+      "id": "analyze_tables",
+      "tool": "table_analyzer",
+      "targets": [
+        "data/budget.csv",
+        "data/staff.tsv"
+      ],
+      "purpose": "compute budget and staff statistics"
+    },
+    {
+      "id": "search_evidence",
+      "tool": "local_file_search",
+      "targets": [
+        "data/budget.csv",
+        "data/staff.tsv",
+        "docs/bid_requirements.md",
+        "docs/meeting_notes.md"
+      ],
+      "purpose": "find evidence lines"
+    },
+    {
+      "id": "write_outputs",
+      "tool": "format_converter",
+      "targets": [],
+      "purpose": "generate markdown and json"
+    },
+    {
+      "id": "verify_evidence",
+      "tool": "evidence_checker",
+      "targets": [],
+      "purpose": "check evidence coverage"
+    }
+  ],
+  "verification": {
+    "passed": true,
+    "checks": {
+      "markdown_exists": true,
+      "json_exists": true,
+      "markdown_nonempty": true,
+      "json_nonempty": true
+    }
+  },
+  "status": "success",
+  "elapsed_sec": 0.014
+}

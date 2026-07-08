@@ -1,0 +1,84 @@
+{
+  "conversation_id": "demo_001",
+  "total_budget_cost": 4800.0,
+  "total_staff_hours": 122.0,
+  "risk_level": "中等",
+  "evidence_counts": {
+    "requirements": 3,
+    "budget": 3,
+    "risks": 3,
+    "staffing": 3
+  },
+  "tables": {
+    "data/budget.csv": {
+      "path": "data/budget.csv",
+      "rows": 5,
+      "columns": [
+        "item",
+        "category",
+        "cost"
+      ],
+      "numeric": {
+        "cost": {
+          "count": 5,
+          "sum": 4800.0,
+          "mean": 960.0,
+          "min": 300.0,
+          "max": 1800.0
+        }
+      },
+      "sample": [
+        {
+          "item": "server_rental",
+          "category": "infrastructure",
+          "cost": "1200"
+        },
+        {
+          "item": "gpu_hours",
+          "category": "compute",
+          "cost": "1800"
+        },
+        {
+          "item": "annotation",
+          "category": "data",
+          "cost": "900"
+        }
+      ]
+    },
+    "data/staff.tsv": {
+      "path": "data/staff.tsv",
+      "rows": 4,
+      "columns": [
+        "name",
+        "role",
+        "hours"
+      ],
+      "numeric": {
+        "hours": {
+          "count": 4,
+          "sum": 122.0,
+          "mean": 30.5,
+          "min": 26.0,
+          "max": 42.0
+        }
+      },
+      "sample": [
+        {
+          "name": "Liang Shaotian",
+          "role": "leader-runtime-integration",
+          "hours": "42"
+        },
+        {
+          "name": "Yang Jinxin",
+          "role": "tool-description-router",
+          "hours": "26"
+        },
+        {
+          "name": "Liu Guangkuo",
+          "role": "skill-functions",
+          "hours": "28"
+        }
+      ]
+    }
+  }
+}
