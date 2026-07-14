@@ -192,7 +192,10 @@ class AgentRuntime:
             f"- 工具调用统计显示：共 {self._fmt_num(tools['total_calls'])} 次历史/输入工具调用记录，整体成功率 {tools['overall_success_rate']}%。",
             "- 如果决策模式为 `rule_fallback`，说明当前环境没有配置可用本地 LLM，系统使用可复现规则分析器完成诊断；这不是伪装成大模型输出。",
             "",
-            "## 2. 需求与约束归纳",
+            "## 2. 数据说明与分析结论",
+            *self._data_analysis_lines(table_stats, budget, staffing, progress, tools, incidents, duplicate_uploads, risk_level),
+            "",
+            "## 3. 需求与约束归纳",
         ]
         md.extend(self._fact_lines(analysis["doc_facts"]["requirements"], "未在文档中抽取到明确需求句。"))
         md.extend(["", "### 用户偏好与演示要求"])
@@ -207,7 +210,7 @@ class AgentRuntime:
         md.extend(
             [
                 "",
-                "## 3. 预算结构诊断",
+                "## 4. 预算结构诊断",
                 f"- 预算总额：{self._fmt_num(budget['total'])}",
                 f"- 成本记录数：{budget['rows']}",
                 f"- 成本分类：{self._format_mapping(budget['by_category'])}",
@@ -228,7 +231,7 @@ class AgentRuntime:
         md.extend(
             [
                 "",
-                "## 4. 人员与进度诊断",
+                "## 5. 人员与进度诊断",
                 f"- 总工时：{self._fmt_num(staffing['total'])}",
                 f"- 人员负载：{self._format_mapping(staffing['by_name'])}",
                 f"- 角色分布：{self._format_mapping(staffing['by_role'])}",
@@ -252,7 +255,7 @@ class AgentRuntime:
         md.extend(
             [
                 "",
-                "## 5. 工具可靠性与事故诊断",
+                "## 6. 工具可靠性与事故诊断",
                 f"- 工具总体成功率：{tools['overall_success_rate']}%",
                 f"- 事故等级分布：{self._format_mapping(incidents['severity'])}",
                 f"- 事故状态分布：{self._format_mapping(incidents['status'])}",
@@ -273,7 +276,7 @@ class AgentRuntime:
         md.extend(
             [
                 "",
-                "## 6. 数据质量与重复上传检查",
+                "## 7. 数据质量与重复上传检查",
             ]
         )
         if duplicate_uploads:
@@ -284,7 +287,7 @@ class AgentRuntime:
             md.append("- 未发现明显重复上传文件。")
         md.append("- 建议正式演示前只保留需要分析的一份数据，避免预算、工时和工具调用记录被重复累计。")
 
-        md.extend(["", "## 7. 可执行建议"])
+        md.extend(["", "## 8. 可执行建议"])
         for item in analysis["recommendations"]["action_items"]:
             md.append(f"- {item}")
         if analysis["recommendations"].get("llm_insights"):
@@ -293,7 +296,7 @@ class AgentRuntime:
                 if item.strip():
                     md.append(f"- {item.strip('- ')}")
 
-        md.extend(["", "## 8. 证据来源"])
+        md.extend(["", "## 9. 证据来源"])
         for key, vals in evidence.items():
             md.append(f"### {self._cn_label(key)}")
             if vals:
@@ -302,7 +305,7 @@ class AgentRuntime:
             else:
                 md.append("- 未检索到匹配证据。")
 
-        md.extend(["", "## 9. 召回记忆"])
+        md.extend(["", "## 10. 召回记忆"])
         if memory:
             md.extend(f"- {self._cn_memory(m)}" for m in memory)
         else:
@@ -347,6 +350,135 @@ class AgentRuntime:
                 "numeric": table.get("numeric", {}),
             }
         return stats
+
+    def _data_analysis_lines(
+        self,
+        table_stats: dict,
+        budget: dict,
+        staffing: dict,
+        progress: dict,
+        tools: dict,
+        incidents: dict,
+        duplicate_uploads: dict,
+        risk_level: str,
+    ) -> list[str]:
+        top_category, top_category_value = self._top_pair(budget["by_category"])
+        top_owner, top_owner_value = self._top_pair(budget["by_owner"])
+        top_stage, top_stage_value = self._top_pair(budget["by_stage"])
+        top_worker, top_worker_hours = self._top_pair(staffing["by_name"])
+        slow_tool = tools["items"][0] if tools["items"] else None
+        top_cost = budget["top_items"][0] if budget["top_items"] else None
+        blocked_modules = [row.get("module", "未命名模块") for row in progress["blocked"]]
+        open_incidents = [row.get("issue_id", "未命名事件") for row in incidents["open_items"]]
+        duplicate_names = list(duplicate_uploads.keys())
+
+        lines = [
+            "### 2.1 本报告分析的是什么数据",
+            "- 本报告分析的是 StateWeaver Agent 项目演示中使用的一组本地文件，包括项目需求文档、会议记录、用户反馈和多张 CSV/TSV 数据表。",
+            "- 文档类数据用于回答“项目要做什么、有什么约束、用户希望系统怎么呈现”；表格类数据用于回答“预算花在哪里、人员投入是否均衡、模块进度是否有阻塞、工具链是否稳定”。",
+            "- 报告中的数值不是模型凭空生成的，而是由工具读取本地表格后计算得到；每个结论都尽量保留文件路径或行号，方便回到原始数据核对。",
+            "",
+            "### 2.2 数据表含义",
+            *self._dataset_description_lines(table_stats),
+            "",
+            "### 2.3 指标口径说明",
+            "- **预算总额**：把所有包含 `cost` 字段的表格记录求和，用来估计项目资源消耗。",
+            "- **人员工时**：把所有包含 `hours` 字段的表格记录求和，用来衡量组员投入规模和负载分布。",
+            "- **平均完成度**：读取包含 `completion_percent` 字段的任务进度表，计算各模块完成比例的平均值。",
+            "- **工具成功率**：读取包含 `calls` 和 `successes` 字段的工具评估表，计算工具调用成功次数占总调用次数的比例。",
+            "- **风险等级**：综合预算规模、阻塞模块、未关闭事件和重复上传数据进行规则评估，目的是提示验收前需要优先检查的问题。",
+            "",
+            "### 2.4 数据范围",
+            f"- 成本数据：共识别 {budget['rows']} 条成本记录，覆盖成本类别、负责人和实施阶段等维度。",
+            f"- 人员数据：共识别 {staffing['rows']} 条工时记录，累计 {self._fmt_num(staffing['total'])} 小时。",
+            f"- 进度数据：共识别 {progress['rows']} 条模块进度记录，平均完成度为 {progress['average_completion']}%。",
+            f"- 工具数据：共识别 {len(tools['items'])} 类工具调用记录，整体成功率为 {tools['overall_success_rate']}%。",
+            f"- 风险事件：共识别 {incidents['rows']} 条事件记录，当前综合风险等级为 **{risk_level}**。",
+            "",
+            "### 2.5 核心分析结论",
+            f"- **预算结论**：当前总预算为 {self._fmt_num(budget['total'])}，主要成本集中在 {self._cn_label(top_category)}，金额 {self._fmt_num(top_category_value)}；成本归属最高的是 {self._cn_label(top_owner)}，金额 {self._fmt_num(top_owner_value)}。",
+            f"- **阶段结论**：投入最高阶段为 {self._cn_label(top_stage)}，金额 {self._fmt_num(top_stage_value)}，说明当前资源主要消耗在该阶段。",
+            f"- **人员结论**：当前工时最高人员为 {self._cn_label(top_worker)}，累计 {self._fmt_num(top_worker_hours)} 小时；高负载人员数量为 {len(staffing['overloaded'])}。",
+            f"- **进度结论**：平均完成度为 {progress['average_completion']}%，低完成度模块和阻塞项需要优先处理。",
+            f"- **可靠性结论**：工具调用成功率为 {tools['overall_success_rate']}%，说明工具执行链路基本稳定；但仍需要关注慢工具和重复上传导致的统计偏差。",
+            "",
+            "### 2.6 异常与风险发现",
+        ]
+        if top_cost:
+            lines.append(
+                f"- 最高单项成本为 {self._cn_label(top_cost.get('item', '未知项目'))}，金额 {self._fmt_num(top_cost.get('cost'))}，来源 {top_cost.get('_path')}。"
+            )
+        if blocked_modules:
+            lines.append(f"- 存在阻塞模块：{'、'.join(blocked_modules[:5])}，应优先处理阻塞原因。")
+        else:
+            lines.append("- 暂未发现明确阻塞模块。")
+        if open_incidents:
+            lines.append(f"- 存在未关闭事件：{'、'.join(open_incidents[:5])}，需要纳入验收前检查清单。")
+        else:
+            lines.append("- 暂未发现未关闭事件。")
+        if duplicate_names:
+            lines.append(f"- 检测到重复上传数据：{'、'.join(duplicate_names[:5])}，这会导致预算、工时或工具记录被重复累计。")
+        else:
+            lines.append("- 未检测到重复上传数据。")
+        if slow_tool:
+            lines.append(
+                f"- 当前平均延迟最高的工具是 `{slow_tool['tool']}`，平均 {self._fmt_num(slow_tool['avg_latency_ms'])} ms，可考虑缓存或减少重复调用。"
+            )
+        lines.extend([
+            "",
+            "### 2.7 面向验收的结论",
+            "- 本次分析不是只展示原始统计值，而是把预算、人员、进度、工具可靠性、风险事件和数据质量合并为一份可追溯诊断。",
+            "- 报告中的每条结论都保留文件路径、表格来源或行号，可用于回答“数据从哪里来、为什么这样判断”。",
+        ])
+        return lines
+
+    def _dataset_description_lines(self, table_stats: dict) -> list[str]:
+        if not table_stats:
+            return ["- 未读取到 CSV/TSV 表格，因此无法形成数据表说明。"]
+        lines = []
+        seen = set()
+        for path, table in table_stats.items():
+            kind = self._dataset_kind(path, table.get("columns", []))
+            if kind in seen and path.startswith("uploads/"):
+                continue
+            seen.add(kind)
+            columns = "、".join(self._cn_label(col) for col in table.get("columns", []))
+            lines.append(f"- **{self._cn_label(kind)}**（{path}）：{self._dataset_meaning(kind)}字段包括：{columns}。")
+        return lines
+
+    def _dataset_kind(self, path: str, columns: list[str]) -> str:
+        cols = set(columns)
+        name = path.rsplit("/", 1)[-1]
+        if "cost" in cols:
+            if {"owner", "stage", "risk_level"}.intersection(cols):
+                return "extended_budget_table"
+            return "budget_table"
+        if "hours" in cols:
+            return "staff_table"
+        if "completion_percent" in cols:
+            return "progress_table"
+        if {"calls", "successes", "avg_latency_ms"}.intersection(cols):
+            return "tool_eval_table"
+        if {"issue_id", "severity", "status"}.intersection(cols):
+            return "incident_table"
+        return name
+
+    def _dataset_meaning(self, kind: str) -> str:
+        mapping = {
+            "budget_table": "这是基础预算表，用来统计项目各类资源成本。",
+            "extended_budget_table": "这是扩展预算表，用来进一步分析成本归属、实施阶段和风险等级。",
+            "staff_table": "这是人员工时表，用来统计各成员角色和计划投入。",
+            "progress_table": "这是任务进度表，用来判断各模块完成度、负责人、阻塞原因和下一步动作。",
+            "tool_eval_table": "这是工具评估表，用来分析各工具调用次数、成功率和平均延迟。",
+            "incident_table": "这是问题事件表，用来跟踪模块风险、严重程度、处理状态和应对动作。",
+        }
+        return mapping.get(kind, "这是补充数据表，用来为当前分析提供额外结构化信息。")
+
+    def _top_pair(self, mapping: dict[str, Any]) -> tuple[str, float]:
+        if not mapping:
+            return "未标注", 0.0
+        key, value = max(mapping.items(), key=lambda item: self._num(item[1]))
+        return key, self._num(value)
 
     def _fact_lines(self, facts: list[dict[str, Any]], empty_text: str) -> list[str]:
         if not facts:
@@ -453,6 +585,34 @@ class AgentRuntime:
             "procedural": "流程记忆",
             "preference": "偏好记忆",
             "episodic": "情景记忆",
+            "item": "项目名称",
+            "category": "成本类别",
+            "cost": "成本金额",
+            "owner": "负责人",
+            "stage": "实施阶段",
+            "risk_level": "风险等级",
+            "name": "成员姓名",
+            "role": "承担角色",
+            "hours": "计划工时",
+            "module": "模块名称",
+            "completion_percent": "完成度",
+            "status": "状态",
+            "blocked_by": "阻塞原因",
+            "next_action": "下一步动作",
+            "tool": "工具名称",
+            "calls": "调用次数",
+            "successes": "成功次数",
+            "avg_latency_ms": "平均延迟",
+            "main_use": "主要用途",
+            "issue_id": "事件编号",
+            "severity": "严重程度",
+            "action": "处理动作",
+            "budget_table": "基础预算表",
+            "extended_budget_table": "扩展预算表",
+            "staff_table": "人员工时表",
+            "progress_table": "任务进度表",
+            "tool_eval_table": "工具评估表",
+            "incident_table": "问题事件表",
             "compute": "计算资源",
             "backend": "后端模块",
             "frontend": "前端界面",
