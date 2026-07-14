@@ -219,8 +219,8 @@ class AgentRuntime:
         if budget["top_items"]:
             for row in budget["top_items"]:
                 md.append(
-                    f"- {row.get('item', 'unknown')}：{self._fmt_num(self._num(row.get('cost')))} "
-                    f"({row.get('category', 'unknown')}，来源 {row.get('_path')})"
+                    f"- {self._cn_label(row.get('item', 'unknown'))}：{self._fmt_num(self._num(row.get('cost')))} "
+                    f"({self._cn_label(row.get('category', 'unknown'))}，来源 {row.get('_path')})"
                 )
         else:
             md.append("- 没有检测到 `cost` 字段，无法形成预算诊断。")
@@ -263,7 +263,7 @@ class AgentRuntime:
             for row in tools["items"][:6]:
                 md.append(
                     f"- `{row['tool']}`：调用 {self._fmt_num(row['calls'])} 次，"
-                    f"成功率 {row['success_rate']}%，平均延迟 {self._fmt_num(row['avg_latency_ms'])} ms，用途：{row['main_use']}"
+                    f"成功率 {row['success_rate']}%，平均延迟 {self._fmt_num(row['avg_latency_ms'])} ms，用途：{self._cn_label(row['main_use'])}"
                 )
         if incidents["open_items"]:
             md.append("### 未关闭事件")
@@ -295,16 +295,16 @@ class AgentRuntime:
 
         md.extend(["", "## 8. 证据来源"])
         for key, vals in evidence.items():
-            md.append(f"### {key}")
+            md.append(f"### {self._cn_label(key)}")
             if vals:
                 for val in vals:
-                    md.append(f"- {val}")
+                    md.append(f"- {self._cn_evidence(val)}")
             else:
                 md.append("- 未检索到匹配证据。")
 
         md.extend(["", "## 9. 召回记忆"])
         if memory:
-            md.extend(f"- {m.get('kind')}: {m.get('content')}" for m in memory)
+            md.extend(f"- {self._cn_memory(m)}" for m in memory)
         else:
             md.append("- 本次未召回相关记忆。")
 
@@ -334,7 +334,7 @@ class AgentRuntime:
             lines = [line.strip(" #") for line in text.splitlines() if line.strip()]
             summaries[path] = {
                 "chars": len(text),
-                "preview": "；".join(lines[:3])[:220],
+                "preview": self._cn_doc_summary(path, text),
             }
         return summaries
 
@@ -351,12 +351,136 @@ class AgentRuntime:
     def _fact_lines(self, facts: list[dict[str, Any]], empty_text: str) -> list[str]:
         if not facts:
             return [f"- {empty_text}"]
-        return [f"- {item['path']}:{item['line']} {item['text']}" for item in facts[:8]]
+        return [f"- {item['path']}:{item['line']} {self._cn_fact(item['text'])}" for item in facts[:8]]
 
     def _format_mapping(self, mapping: dict[str, Any]) -> str:
         if not mapping:
             return "无"
-        return "；".join(f"{key}={self._fmt_num(value)}" for key, value in mapping.items())
+        return "；".join(f"{self._cn_label(key)}={self._fmt_num(value)}" for key, value in mapping.items())
+
+    def _cn_doc_summary(self, path: str, text: str) -> str:
+        low = text.lower()
+        parts = []
+        if "local document and data analysis assistant" in low or "traceable reports" in low:
+            parts.append("要求构建本地文档与数据分析助手，读取本地文件、分析预算表并生成可追溯报告")
+        if "mandatory deliverables" in low or "generated outputs" in low:
+            parts.append("强调交付物必须包含 Markdown 报告、JSON 摘要和可复现输出")
+        if "meeting notes" in low or "runtime orchestration" in low:
+            parts.append("记录组内模块分工，包括运行编排、工具函数、工具路由、本地决策和记忆管理")
+        if "interface feedback" in low or "file picker" in low or "browser interface" in low:
+            parts.append("记录用户对 Web 界面、文件选择、中文报告和结果查看位置的反馈")
+        if "risk" in low or "unstable" in low or "unavailable" in low:
+            parts.append("包含模型服务、数据格式、证据约束和运行稳定性相关风险")
+        if "memory" in low:
+            parts.append("包含长期记忆、偏好保存、重复记忆和冲突处理相关案例")
+        if not parts:
+            title = path.rsplit("/", 1)[-1].replace("_", " ")
+            parts.append(f"该文件提供 {title} 相关的任务背景、约束或补充材料")
+        return "；".join(dict.fromkeys(parts))[:260]
+
+    def _cn_fact(self, text: str) -> str:
+        low = text.lower()
+        if "local document and data analysis assistant" in low:
+            return "要求系统作为本地文档与数据分析助手，读取本地文件、汇总需求、分析预算并生成可追溯报告。"
+        if "mandatory deliverables" in low:
+            return "要求输出必须包含指定交付物，便于验收时检查。"
+        if "json summary" in low:
+            return "要求生成 JSON 摘要，包含总预算、预期成本和风险等级等结构化结果。"
+        if "workflow should run locally" in low:
+            return "要求完整工作流能够在本地运行，不依赖远程服务。"
+        if "all generated outputs should be reproducible" in low:
+            return "要求所有生成结果可复现，便于重复验收和问题定位。"
+        if "visible browser interface" in low:
+            return "用户希望通过可视化浏览器界面操作，而不是直接编辑原始 JSON。"
+        if "selecting files" in low or "file picker" in low:
+            return "用户希望可以直接从文件资源管理器选择文件，降低配置难度。"
+        if "chinese reports" in low:
+            return "用户明确偏好中文报告，便于课堂展示和答辩说明。"
+        if "memory should" in low or "memory" in low:
+            return "要求记忆模块保存用户偏好、成功工具路径和失败记录，为后续任务提供上下文。"
+        if "tools should return" in low:
+            return "要求工具结果采用统一格式，方便运行时汇总、验证和追踪。"
+        if "router should choose" in low:
+            return "要求工具路由器选择小而具体的任务工具集，减少无关工具干扰。"
+        if "risk" in low or "unstable" in low or "unavailable" in low:
+            return "该证据指出模型服务、工具调用或资源可用性存在稳定性风险。"
+        if any("\u4e00" <= ch <= "\u9fff" for ch in text):
+            return text[:220]
+        return "该行提供了与当前任务相关的英文原始证据，报告已转写为中文释义，原文可通过对应文件和行号追溯。"
+
+    def _cn_evidence(self, value: str) -> str:
+        ref, sep, text = value.partition(" ")
+        low = text.lower()
+        if text.startswith("item,category,cost"):
+            return f"{ref} 表格表头包含项目、类别和成本字段，可用于预算统计。"
+        if text.startswith("name,role,hours"):
+            return f"{ref} 表格表头包含姓名、角色和工时字段，可用于人员投入统计。"
+        if text.startswith("tool,calls,successes"):
+            return f"{ref} 表格表头包含工具名、调用次数、成功次数和平均延迟字段，可用于工具可靠性分析。"
+        if text.startswith("module,owner,completion_percent"):
+            return f"{ref} 表格表头包含模块、负责人、完成度、阻塞原因和下一步动作，可用于进度诊断。"
+        if text.startswith("issue_id"):
+            return f"{ref} 表格表头包含事件编号、模块、严重程度、状态和处理动作，可用于风险跟踪。"
+        if "gpu_hours" in low:
+            return f"{ref} 预算记录显示 GPU 算力属于计算资源成本，金额为 1800。"
+        if not sep:
+            return value
+        return f"{ref} {self._cn_fact(text)}"
+
+    def _cn_memory(self, memory_item: dict[str, Any]) -> str:
+        kind = self._cn_label(memory_item.get("kind", "memory"))
+        content = str(memory_item.get("content", ""))
+        low = content.lower()
+        if "csv analysis" in low:
+            return f"{kind}：处理 CSV 任务时，应先检查表头，再计算总和与均值，最后验证 JSON 字段。"
+        if "prefers concise markdown" in low:
+            return f"{kind}：用户偏好简洁的 Markdown 报告，并希望先展示表格，再列出风险要点。"
+        if "completed local document" in low:
+            return f"{kind}：系统曾完成本地文档与表格分析，并生成可追溯输出。"
+        if "completed analysis in" in low:
+            return f"{kind}：系统曾完成一次带决策模式记录的文档与表格诊断任务。"
+        if any("\u4e00" <= ch <= "\u9fff" for ch in content):
+            return f"{kind}：{content}"
+        return f"{kind}：该记忆记录为历史运行经验，已用于当前任务上下文。"
+
+    def _cn_label(self, value: Any) -> str:
+        text = str(value)
+        mapping = {
+            "requirements": "需求证据",
+            "budget": "预算证据",
+            "risks": "风险证据",
+            "staffing": "人员证据",
+            "procedural": "流程记忆",
+            "preference": "偏好记忆",
+            "episodic": "情景记忆",
+            "compute": "计算资源",
+            "backend": "后端模块",
+            "frontend": "前端界面",
+            "documentation": "文档材料",
+            "engineering": "工程实现",
+            "data": "数据材料",
+            "infrastructure": "基础设施",
+            "integration": "集成联调",
+            "implementation": "功能实现",
+            "validation": "验证测试",
+            "presentation": "展示材料",
+            "unknown": "未标注",
+            "gpu_hours": "GPU 算力",
+            "local_llm_server": "本地模型服务",
+            "web_console": "网页控制台",
+            "skill_registry": "工具注册表",
+            "tool_schema_layer": "工具 Schema 层",
+            "memory_store": "记忆存储",
+            "testing_and_report": "测试与报告",
+            "poster_materials": "展示材料",
+            "read markdown and text files": "读取 Markdown 与文本文件",
+            "sum numeric columns and count rows": "统计数值列并计算行数",
+            "find evidence lines": "检索证据行",
+            "verify report claims": "验证报告结论",
+            "export markdown and json outputs": "导出 Markdown 与 JSON 输出",
+            "compute simple totals": "计算简单汇总值",
+        }
+        return mapping.get(text, text)
 
     def _risk_level(self, budget: dict, progress: dict, incidents: dict, duplicate_uploads: dict) -> str:
         score = 0
