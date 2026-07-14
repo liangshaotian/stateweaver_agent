@@ -1,0 +1,6 @@
+issue_id	module	severity	status	owner	action
+INC-001	B4_local_llm	high	mitigated	Liang Shaotian	Use rule planner when model service is unavailable
+INC-002	B2_skills	medium	closed	Liu Guangkuo	Normalize tool result format with SkillResult
+INC-003	B3_tool_schema	medium	closed	Yang Jinxin	Add schema validation before execution
+INC-004	B5_memory	medium	monitoring	Wang Xuanhao	Deduplicate memory records by content hash
+INC-005	web_console	low	closed	Liang Shaotian	Add direct file selection and upload

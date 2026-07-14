@@ -1,0 +1,8 @@
+item,category,cost,owner,stage,risk_level
+local_llm_server,compute,1800,Liang Shaotian,integration,high
+web_console,frontend,900,Liang Shaotian,implementation,medium
+skill_registry,backend,650,Liu Guangkuo,implementation,medium
+tool_schema_layer,backend,720,Yang Jinxin,implementation,medium
+memory_store,backend,580,Wang Xuanhao,implementation,medium
+testing_and_report,documentation,420,Liang Shaotian,validation,low
+poster_materials,documentation,260,Liang Shaotian,presentation,low

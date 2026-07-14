@@ -1,0 +1,7 @@
+tool,calls,successes,avg_latency_ms,main_use
+file_reader,12,12,35,read markdown and text files
+table_analyzer,9,9,48,sum numeric columns and count rows
+local_file_search,6,6,41,find evidence lines
+evidence_checker,7,7,28,verify report claims
+format_converter,4,4,24,export markdown and json outputs
+calculator,5,5,12,compute simple totals

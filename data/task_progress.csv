@@ -1,0 +1,8 @@
+module,owner,completion_percent,status,blocked_by,next_action
+B1_runtime,Liang Shaotian,95,done,,polish trace explanation
+B2_skills,Liu Guangkuo,88,done,,add more tool examples
+B3_tool_schema,Yang Jinxin,86,done,,document parameter repair
+B4_local_llm,Liang Shaotian,82,done,model availability,keep rule fallback
+B5_memory,Wang Xuanhao,84,done,,add conflict examples
+web_console,Liang Shaotian,90,done,,improve upload workflow
+final_report,Liang Shaotian,80,in_progress,manual review,align contribution description
