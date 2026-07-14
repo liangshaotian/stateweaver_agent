@@ -473,6 +473,17 @@ StateWeaver web UI: http://127.0.0.1:8066
 | 杨金鑫 | 20216424 | B3 工具说明生成与工具调用模块 |
 | 王渲淏 | 20236512 | B5 记忆文档存储与查找模块 |
 
+### 成员与代码文件对应关系
+
+说明：本项目采用统一架构协作方式。梁少天作为组长参与 B1-B5 全部模块的核心设计、主干代码实现、模块联调和最终验收；其他三位成员在对应模块中承担重点子任务，因此下面的代码对应关系表示主要参与范围，不表示该模块由单一成员完全独占。
+
+| 成员 | 主要对应模块 | 主要对应代码文件 |
+| :--- | :--- | :--- |
+| 梁少天 | 总体架构、B1 Runtime、B2 工具接口规范、B3 调用链联调、B4 决策与验证、B5 记忆接入、Web Console、运行入口与集成测试 | `main.py`、`web_server.py`、`local_llm_server.py`、`b1_runtime/runtime.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py`、`b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`、`b3_tools/executor.py`、`b4_decision/planner.py`、`b4_decision/analyst.py`、`b4_decision/verifier.py`、`b5_memory/memory_store.py`、`web/index.html`、`tests/smoke_test.py`、`scripts/benchmark.py` |
+| 刘广阔 | B2 Skill 工具函数模块的具体工具实现、工具输入输出规范适配、工具结果封装与异常处理 | `b2_skills/calculator.py`、`b2_skills/file_reader.py`、`b2_skills/local_file_search.py`、`b2_skills/table_analyzer.py`、`b2_skills/format_converter.py`、`b2_skills/evidence_checker.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py` |
+| 杨金鑫 | B3 工具说明生成、动态工具筛选、Tool Schema 编译、参数校验和工具调用执行链路 | `b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`、`b3_tools/executor.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py` |
+| 王渲淏 | B5 记忆文档存储与查找模块、记忆记录结构、相关性检索、任务经验写回与读取 | `b5_memory/memory_store.py`、`configs/memory.json`、`b1_runtime/runtime.py` 中的记忆检索与写回调用 |
+
 ## 版本说明
 
 当前版本为课程项目最终展示版，重点保证：
