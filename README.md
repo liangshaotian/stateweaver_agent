@@ -179,6 +179,7 @@ http://127.0.0.1:8066/
 Web 控制台支持：
 
 - 查看和编辑任务配置
+- 从文件资源管理器选择文件并上传到 `uploads/`，自动加入读取白名单
 - 一键运行 Agent
 - 查看 Markdown 报告
 - 查看 JSON Summary
@@ -214,7 +215,7 @@ configs/runtime_input.json
 }
 ```
 
-修改 `user_input`、`allowed_files` 和 `output_requirements` 后，可以让 Agent 处理新的本地文档和表格任务。
+修改 `user_input`、`allowed_files` 和 `output_requirements` 后，可以让 Agent 处理新的本地文档和表格任务。Web 控制台也支持直接选择本地文件，文件会被复制到项目内 `uploads/` 目录，并自动写入 `allowed_files`。
 
 ## 输出文件说明
 
@@ -257,6 +258,7 @@ risk= 中等
 - `GET /api/status`：查看项目状态
 - `GET /api/config`：读取任务配置
 - `POST /api/config`：保存任务配置
+- `POST /api/upload`：上传本地文件到 `uploads/` 并返回可读取的相对路径
 - `POST /api/run`：运行 Agent
 - `GET /api/file?path=...`：读取输出文件
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import mimetypes
+import re
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -13,6 +14,7 @@ from b1_runtime.runtime import AgentRuntime
 ROOT = Path(__file__).resolve().parent
 WEB_ROOT = ROOT / "web"
 DEFAULT_CONFIG = ROOT / "configs" / "runtime_input.json"
+UPLOAD_ROOT = ROOT / "uploads"
 HOST = "127.0.0.1"
 PORT = 8066
 API_TOKEN = "stateweaver-20236533"
@@ -27,6 +29,56 @@ def safe_path(rel_path: str) -> Path:
 
 def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def upload_name(filename: str) -> str:
+    name = Path(filename).name.strip().replace(" ", "_")
+    name = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in name)
+    name = name.strip("._") or "upload"
+    return name[:120]
+
+
+def unique_upload_path(filename: str) -> Path:
+    UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
+    safe_name = upload_name(filename)
+    target = UPLOAD_ROOT / safe_name
+    if not target.exists():
+        return target
+    stem = target.stem or "upload"
+    suffix = target.suffix
+    for i in range(1, 1000):
+        candidate = UPLOAD_ROOT / f"{stem}_{i}{suffix}"
+        if not candidate.exists():
+            return candidate
+    raise ValueError("too many duplicate uploaded filenames")
+
+
+def parse_multipart_files(body: bytes, content_type: str) -> list[tuple[str, bytes]]:
+    match = re.search(r"boundary=(?P<boundary>[^;]+)", content_type)
+    if not match:
+        raise ValueError("missing multipart boundary")
+    boundary = match.group("boundary").strip().strip('"').encode("utf-8")
+    files: list[tuple[str, bytes]] = []
+    for part in body.split(b"--" + boundary):
+        part = part.strip()
+        if not part or part == b"--":
+            continue
+        if part.endswith(b"--"):
+            part = part[:-2].strip()
+        if b"\r\n\r\n" not in part:
+            continue
+        raw_headers, content = part.split(b"\r\n\r\n", 1)
+        headers = raw_headers.decode("utf-8", errors="replace")
+        filename_match = re.search(r'filename="(?P<filename>[^"]*)"', headers)
+        if not filename_match:
+            continue
+        filename = filename_match.group("filename")
+        if not filename:
+            continue
+        if content.endswith(b"\r\n"):
+            content = content[:-2]
+        files.append((filename, content))
+    return files
 
 
 def trace_records() -> list[dict]:
@@ -200,6 +252,8 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/api/run":
             return self.run_agent()
+        if parsed.path == "/api/upload":
+            return self.upload_files()
         if parsed.path == "/api/agent/run":
             if not self.authorized():
                 return self.json_response({"error": "unauthorized"}, status=401)
@@ -263,6 +317,25 @@ class Handler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
             DEFAULT_CONFIG.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
             return self.json_response({"ok": True, "config": payload})
+        except Exception as exc:
+            return self.json_response({"ok": False, "error": str(exc)}, status=400)
+
+    def upload_files(self) -> None:
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if length <= 0:
+                return self.json_response({"ok": False, "error": "empty upload"}, status=400)
+            content_type = self.headers.get("Content-Type", "")
+            files = parse_multipart_files(self.rfile.read(length), content_type)
+            if not files:
+                return self.json_response({"ok": False, "error": "no files found in upload"}, status=400)
+            saved = []
+            for original_name, content in files:
+                target = unique_upload_path(original_name)
+                target.write_bytes(content)
+                rel_path = target.relative_to(ROOT).as_posix()
+                saved.append({"name": original_name, "path": rel_path, "size": len(content)})
+            return self.json_response({"ok": True, "files": saved})
         except Exception as exc:
             return self.json_response({"ok": False, "error": str(exc)}, status=400)
 

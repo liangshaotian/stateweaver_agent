@@ -182,6 +182,19 @@
       font-size: 11px;
       line-height: 1.5;
     }
+    .upload-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .upload-row input[type="file"] {
+      display: none;
+    }
+    .upload-status {
+      color: var(--muted);
+      font-size: 11px;
+    }
     .check-row {
       display: flex;
       align-items: center;
@@ -444,7 +457,12 @@
           <div class="field">
             <span class="field-title">允许读取的文件</span>
             <textarea id="allowedFilesInput" class="file-list-input" spellcheck="false"></textarea>
-            <p class="field-help">每行一个项目内相对路径，例如 docs/xxx.md 或 data/xxx.csv。这里是读取白名单，不在列表中的文件不会被 Agent 读取。</p>
+            <div class="upload-row">
+              <button id="uploadBtn" type="button">选择文件</button>
+              <input id="fileUploadInput" type="file" multiple>
+              <span id="uploadStatus" class="upload-status">可直接从文件资源管理器选择文件。</span>
+            </div>
+            <p class="field-help">选择的文件会复制到项目的 uploads/ 目录，并自动加入读取列表。也可以手动填写项目内相对路径，例如 docs/xxx.md 或 data/xxx.csv。</p>
           </div>
           <div class="field">
             <span class="field-title">输出内容</span>
@@ -536,6 +554,9 @@
     const notice = document.getElementById("notice");
     const taskInput = document.getElementById("taskInput");
     const allowedFilesInput = document.getElementById("allowedFilesInput");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileUploadInput = document.getElementById("fileUploadInput");
+    const uploadStatus = document.getElementById("uploadStatus");
     const maxRoundsInput = document.getElementById("maxRoundsInput");
     const maxToolCallsInput = document.getElementById("maxToolCallsInput");
     const maxSecondsInput = document.getElementById("maxSecondsInput");
@@ -560,6 +581,14 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "request failed");
       return data;
+    }
+    async function postUpload(files) {
+      const form = new FormData();
+      Array.from(files).forEach(file => form.append("files", file));
+      const res = await fetch("/api/upload", {method: "POST", body: form});
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "upload failed");
+      return data.files || [];
     }
     function renderPipeline(trace) {
       const done = new Set(trace.map(r => r.stage));
@@ -638,6 +667,21 @@
       };
       editor.value = JSON.stringify(cfg, null, 2);
       return cfg;
+    }
+    function addAllowedFilePaths(paths) {
+      const current = allowedFilesInput.value
+        .split(/\r?\n/)
+        .map(path => path.trim())
+        .filter(Boolean);
+      const seen = new Set(current);
+      paths.forEach(path => {
+        if (!seen.has(path)) {
+          current.push(path);
+          seen.add(path);
+        }
+      });
+      allowedFilesInput.value = current.join("\n");
+      syncSimpleFormToEditor();
     }
     async function loadStatus() {
       notify("正在刷新状态...");
@@ -744,6 +788,24 @@
         notify("刷新完成");
       } catch (err) {
         notify("刷新失败：" + String(err.message || err), true);
+      }
+    });
+    uploadBtn.addEventListener("click", () => fileUploadInput.click());
+    fileUploadInput.addEventListener("change", async () => {
+      if (!fileUploadInput.files || fileUploadInput.files.length === 0) return;
+      uploadBtn.disabled = true;
+      uploadStatus.textContent = "正在上传...";
+      try {
+        const files = await postUpload(fileUploadInput.files);
+        addAllowedFilePaths(files.map(file => file.path));
+        uploadStatus.textContent = `已添加 ${files.length} 个文件`;
+        notify("文件已上传并加入读取列表");
+      } catch (err) {
+        uploadStatus.textContent = "上传失败";
+        notify("上传失败：" + String(err.message || err), true);
+      } finally {
+        fileUploadInput.value = "";
+        uploadBtn.disabled = false;
       }
     });
     [taskInput, allowedFilesInput, maxRoundsInput, maxToolCallsInput, maxSecondsInput, ...qsa(".formatChoice")].forEach(el => {
