@@ -481,29 +481,58 @@ StateWeaver web UI: http://127.0.0.1:8066
 
 主要负责总体架构、B1-B5 核心设计与主干实现、Verification、Recovery、Web Console、运行入口、模块联调和最终验收。
 
-- 运行入口与集成：`main.py`、`web_server.py`、`local_llm_server.py`
-- B1 状态驱动 Runtime：`b1_runtime/runtime.py`
-- B2 工具接口规范与注册联调：`b2_skills/registry.py`、`b2_skills/skill_spec.py`
-- B3 工具调用链联调：`b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`、`b3_tools/executor.py`
-- B4 决策、分析与验证：`b4_decision/planner.py`、`b4_decision/analyst.py`、`b4_decision/verifier.py`
-- B5 记忆接入：`b5_memory/memory_store.py`
-- Web Console 与验证脚本：`web/index.html`、`tests/smoke_test.py`、`scripts/benchmark.py`
+- 运行入口与集成：
+  - `main.py`
+  - `web_server.py`
+  - `local_llm_server.py`
+- B1 状态驱动 Runtime：
+  - `b1_runtime/runtime.py`
+- B2 工具接口规范与注册联调：
+  - `b2_skills/registry.py`
+  - `b2_skills/skill_spec.py`
+- B3 工具调用链联调：
+  - `b3_tools/schema_compiler.py`
+  - `b3_tools/tool_router.py`
+  - `b3_tools/executor.py`
+- B4 决策、分析与验证：
+  - `b4_decision/planner.py`
+  - `b4_decision/analyst.py`
+  - `b4_decision/verifier.py`
+- B5 记忆接入：
+  - `b5_memory/memory_store.py`
+- Web Console 与验证脚本：
+  - `web/index.html`
+  - `tests/smoke_test.py`
+  - `scripts/benchmark.py`
 
 #### 刘广阔 20236507
 
 重点参与 B2 Skill 工具函数模块，包括具体工具实现、工具输入输出规范适配、工具结果封装与异常处理。
 
-- 工具函数实现：`b2_skills/calculator.py`、`b2_skills/file_reader.py`、`b2_skills/local_file_search.py`
-- 表格与格式工具：`b2_skills/table_analyzer.py`、`b2_skills/format_converter.py`
-- 证据检查与工具注册：`b2_skills/evidence_checker.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py`
+- 工具函数实现：
+  - `b2_skills/calculator.py`
+  - `b2_skills/file_reader.py`
+  - `b2_skills/local_file_search.py`
+- 表格与格式工具：
+  - `b2_skills/table_analyzer.py`
+  - `b2_skills/format_converter.py`
+- 证据检查与工具注册：
+  - `b2_skills/evidence_checker.py`
+  - `b2_skills/registry.py`
+  - `b2_skills/skill_spec.py`
 
 #### 杨金鑫 20216424
 
 重点参与 B3 工具说明生成与工具调用模块，包括动态工具筛选、Tool Schema 编译、参数校验和工具执行链路。
 
-- Schema 编译与工具路由：`b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`
-- 工具执行与结果封装：`b3_tools/executor.py`
-- 与 B2 工具注册结构联调：`b2_skills/registry.py`、`b2_skills/skill_spec.py`
+- Schema 编译与工具路由：
+  - `b3_tools/schema_compiler.py`
+  - `b3_tools/tool_router.py`
+- 工具执行与结果封装：
+  - `b3_tools/executor.py`
+- 与 B2 工具注册结构联调：
+  - `b2_skills/registry.py`
+  - `b2_skills/skill_spec.py`
 
 #### 王渲淏 20236512
 
