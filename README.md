@@ -477,12 +477,41 @@ StateWeaver web UI: http://127.0.0.1:8066
 
 说明：本项目采用统一架构协作方式。梁少天作为组长参与 B1-B5 全部模块的核心设计、主干代码实现、模块联调和最终验收；其他三位成员在对应模块中承担重点子任务，因此下面的代码对应关系表示主要参与范围，不表示该模块由单一成员完全独占。
 
-| 成员 | 主要对应模块 | 主要对应代码文件 |
-| :--- | :--- | :--- |
-| 梁少天 | 总体架构、B1 Runtime、B2 工具接口规范、B3 调用链联调、B4 决策与验证、B5 记忆接入、Web Console、运行入口与集成测试 | `main.py`、`web_server.py`、`local_llm_server.py`、`b1_runtime/runtime.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py`、`b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`、`b3_tools/executor.py`、`b4_decision/planner.py`、`b4_decision/analyst.py`、`b4_decision/verifier.py`、`b5_memory/memory_store.py`、`web/index.html`、`tests/smoke_test.py`、`scripts/benchmark.py` |
-| 刘广阔 | B2 Skill 工具函数模块的具体工具实现、工具输入输出规范适配、工具结果封装与异常处理 | `b2_skills/calculator.py`、`b2_skills/file_reader.py`、`b2_skills/local_file_search.py`、`b2_skills/table_analyzer.py`、`b2_skills/format_converter.py`、`b2_skills/evidence_checker.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py` |
-| 杨金鑫 | B3 工具说明生成、动态工具筛选、Tool Schema 编译、参数校验和工具调用执行链路 | `b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`、`b3_tools/executor.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py` |
-| 王渲淏 | B5 记忆文档存储与查找模块、记忆记录结构、相关性检索、任务经验写回与读取 | `b5_memory/memory_store.py`、`configs/memory.json`、`b1_runtime/runtime.py` 中的记忆检索与写回调用 |
+#### 梁少天 20236533
+
+主要负责总体架构、B1-B5 核心设计与主干实现、Verification、Recovery、Web Console、运行入口、模块联调和最终验收。
+
+- 运行入口与集成：`main.py`、`web_server.py`、`local_llm_server.py`
+- B1 状态驱动 Runtime：`b1_runtime/runtime.py`
+- B2 工具接口规范与注册联调：`b2_skills/registry.py`、`b2_skills/skill_spec.py`
+- B3 工具调用链联调：`b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`、`b3_tools/executor.py`
+- B4 决策、分析与验证：`b4_decision/planner.py`、`b4_decision/analyst.py`、`b4_decision/verifier.py`
+- B5 记忆接入：`b5_memory/memory_store.py`
+- Web Console 与验证脚本：`web/index.html`、`tests/smoke_test.py`、`scripts/benchmark.py`
+
+#### 刘广阔 20236507
+
+重点参与 B2 Skill 工具函数模块，包括具体工具实现、工具输入输出规范适配、工具结果封装与异常处理。
+
+- 工具函数实现：`b2_skills/calculator.py`、`b2_skills/file_reader.py`、`b2_skills/local_file_search.py`
+- 表格与格式工具：`b2_skills/table_analyzer.py`、`b2_skills/format_converter.py`
+- 证据检查与工具注册：`b2_skills/evidence_checker.py`、`b2_skills/registry.py`、`b2_skills/skill_spec.py`
+
+#### 杨金鑫 20216424
+
+重点参与 B3 工具说明生成与工具调用模块，包括动态工具筛选、Tool Schema 编译、参数校验和工具执行链路。
+
+- Schema 编译与工具路由：`b3_tools/schema_compiler.py`、`b3_tools/tool_router.py`
+- 工具执行与结果封装：`b3_tools/executor.py`
+- 与 B2 工具注册结构联调：`b2_skills/registry.py`、`b2_skills/skill_spec.py`
+
+#### 王渲淏 20236512
+
+重点参与 B5 记忆文档存储与查找模块，包括记忆记录结构、相关性检索、任务经验写回与读取。
+
+- 记忆存储与检索：`b5_memory/memory_store.py`
+- 本地记忆文件：`configs/memory.json`
+- Runtime 中的记忆调用接入：`b1_runtime/runtime.py`
 
 ## 版本说明
 
