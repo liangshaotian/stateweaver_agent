@@ -9,6 +9,7 @@ from typing import Any
 from b3_tools.executor import ToolExecutor
 from b3_tools.schema_compiler import compile_schema
 from b3_tools.tool_router import route_tools
+from b4_decision.analyst import DecisionAnalyst
 from b4_decision.planner import Planner
 from b4_decision.verifier import Verifier
 from b5_memory import MemoryStore
@@ -29,6 +30,7 @@ class AgentRuntime:
         self.checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
         self.executor = ToolExecutor()
         self.planner = Planner()
+        self.analyst = DecisionAnalyst(self.config)
         self.verifier = Verifier()
         self.memory = MemoryStore(PROJECT_ROOT / "configs" / "memory.json")
         self.state: dict[str, Any] = {
@@ -84,10 +86,10 @@ class AgentRuntime:
                         tables[path] = rec["result"]["output"]
             elif step["id"] == "search_evidence":
                 queries = {
-                    "requirements": "requires deliverables workflow local",
-                    "budget": "budget cost",
-                    "risks": "risks unstable gpu",
-                    "staffing": "modules runtime memory tools",
+                    "requirements": "requires deliverables workflow local 需要 必须 要求 提交",
+                    "budget": "budget cost 预算 成本 金额",
+                    "risks": "risks unstable gpu unavailable 风险 不稳定 失败 不可用",
+                    "staffing": "modules runtime memory tools hours 人员 工时 模块",
                 }
                 for key, query in queries.items():
                     rec = self.executor.execute(
@@ -96,9 +98,21 @@ class AgentRuntime:
                     )
                     self._record_tool(rec)
                     if rec["status"] == "ok":
-                        evidence[key] = [f'{h["path"]}:{h["line"]} {h["text"]}' for h in rec["result"]["output"]["hits"][:3]]
+                        evidence[key] = [f'{h["path"]}:{h["line"]} {h["text"]}' for h in rec["result"]["output"]["hits"][:5]]
 
-        payload = self._build_report_payload(docs, tables, evidence, selected_memory)
+        analysis = self.analyst.analyze(docs, tables, evidence, selected_memory)
+        self.state["analysis"] = analysis
+        self.event(
+            "ANALYZE",
+            {
+                "decision_mode": analysis["decision_mode"],
+                "llm_used": analysis["llm"]["used"],
+                "llm_reason": analysis["llm"]["reason"],
+                "analysis_elapsed_sec": analysis["analysis_elapsed_sec"],
+            },
+        )
+
+        payload = self._build_report_payload(docs, tables, evidence, selected_memory, analysis)
         out_req = self.config["output_requirements"]
         rec = self.executor.execute(
             "format_converter",
@@ -119,8 +133,8 @@ class AgentRuntime:
 
         memory_rec = self.memory.write_back(
             self.cid,
-            "Completed local document and table analysis with traceable outputs.",
-            ["demo", "document", "table", "trace"],
+            f"Completed analysis in {analysis['decision_mode']} mode with {len(docs)} docs and {len(tables)} tables.",
+            ["demo", "document", "table", "trace", analysis["decision_mode"]],
         )
         self.event("SAVE_MEMORY", {"memory_id": memory_rec["id"]})
 
@@ -140,41 +154,50 @@ class AgentRuntime:
         self.state["tool_calls"].append(rec)
         self.event("TOOL_CALL", {"tool": rec["tool"], "status": rec["status"], "elapsed_sec": rec["elapsed_sec"]})
 
-    def _build_report_payload(self, docs: dict[str, str], tables: dict[str, dict], evidence: dict, memory: list[dict]) -> dict:
+    def _build_report_payload(
+        self,
+        docs: dict[str, str],
+        tables: dict[str, dict],
+        evidence: dict,
+        memory: list[dict],
+        analysis: dict[str, Any],
+    ) -> dict:
         input_files = self.config.get("allowed_files", [])
         generated_at = datetime.now().isoformat(timespec="seconds")
         doc_summaries = self._summarize_docs(docs)
         table_stats = self._summarize_tables(tables)
-        total_cost = sum(
-            table["numeric"]["cost"]["sum"]
-            for table in table_stats.values()
-            if "cost" in table["numeric"]
-        )
-        total_hours = sum(
-            table["numeric"]["hours"]["sum"]
-            for table in table_stats.values()
-            if "hours" in table["numeric"]
-        )
-        budget_rows = sum(table["rows"] for table in table_stats.values() if "cost" in table["numeric"])
-        staff_rows = sum(table["rows"] for table in table_stats.values() if "hours" in table["numeric"])
-        risk_level = "中等" if total_cost and total_cost < 6000 else "较高"
-        if not total_cost and evidence.get("risks"):
-            risk_level = "中等"
+        diagnosis = analysis["table_diagnosis"]
+        budget = diagnosis["budget"]
+        staffing = diagnosis["staffing"]
+        progress = diagnosis["progress"]
+        tools = diagnosis["tools"]
+        incidents = diagnosis["incidents"]
+        duplicate_uploads = diagnosis["duplicate_uploads"]
+        risk_level = self._risk_level(budget, progress, incidents, duplicate_uploads)
 
         md = [
             "# StateWeaver Agent 中文运行报告",
             "",
             f"> 生成时间：{generated_at}  ",
-            f"> 会话编号：{self.cid}",
+            f"> 会话编号：{self.cid}  ",
+            f"> 决策模式：{analysis['decision_mode']}；{analysis['llm']['reason']}  ",
+            f"> 分析耗时：{analysis['analysis_elapsed_sec']} 秒；LLM 耗时：{analysis['llm']['elapsed_sec']} 秒",
             "",
             "## 0. 本次实际输入文件",
             *[f"- {path}" for path in input_files],
             "",
-            "## 1. 项目需求概述",
-            f"本次任务共读取 {len(docs)} 个文档文件、分析 {len(tables)} 个表格文件。系统根据当前配置中的 `allowed_files` 动态选择文件，不再固定只读取默认示例文件。",
+            "## 1. 执行摘要",
+            f"- 本次共读取 {len(docs)} 个文档文件、分析 {len(tables)} 个表格文件，并生成带证据来源的 Markdown 与 JSON 输出。",
+            f"- 预算总额为 {self._fmt_num(budget['total'])}，工时总量为 {self._fmt_num(staffing['total'])}，综合风险等级评估为 **{risk_level}**。",
+            f"- 工具调用统计显示：共 {self._fmt_num(tools['total_calls'])} 次历史/输入工具调用记录，整体成功率 {tools['overall_success_rate']}%。",
+            "- 如果决策模式为 `rule_fallback`，说明当前环境没有配置可用本地 LLM，系统使用可复现规则分析器完成诊断；这不是伪装成大模型输出。",
             "",
-            "### 文档摘要",
+            "## 2. 需求与约束归纳",
         ]
+        md.extend(self._fact_lines(analysis["doc_facts"]["requirements"], "未在文档中抽取到明确需求句。"))
+        md.extend(["", "### 用户偏好与演示要求"])
+        md.extend(self._fact_lines(analysis["doc_facts"]["preferences"], "未在文档中抽取到明确偏好。"))
+        md.extend(["", "### 文档摘要"])
         if doc_summaries:
             for path, item in doc_summaries.items():
                 md.append(f"- **{path}**：{item['preview']}（约 {item['chars']} 字符）")
@@ -184,47 +207,93 @@ class AgentRuntime:
         md.extend(
             [
                 "",
-                "## 2. 预算统计结果",
-                f"- 预算总额：{self._fmt_num(total_cost)}",
-                f"- 预算相关记录数：{budget_rows}",
-                "- 统计方式：扫描本次读取的所有 CSV/TSV 表格，对包含 `cost` 字段的表格求和。",
-                "",
-                "## 3. 人员工时统计",
-                f"- 计划总工时：{self._fmt_num(total_hours)}",
-                f"- 工时相关记录数：{staff_rows}",
-                "- 统计方式：扫描本次读取的所有 CSV/TSV 表格，对包含 `hours` 字段的表格求和。",
-                "",
-                "## 4. 表格明细统计",
+                "## 3. 预算结构诊断",
+                f"- 预算总额：{self._fmt_num(budget['total'])}",
+                f"- 成本记录数：{budget['rows']}",
+                f"- 成本分类：{self._format_mapping(budget['by_category'])}",
+                f"- 成本归属：{self._format_mapping(budget['by_owner'])}",
+                f"- 实施阶段成本：{self._format_mapping(budget['by_stage'])}",
+                "### 最高成本项",
             ]
         )
-        if table_stats:
-            for path, table in table_stats.items():
-                md.append(f"### {path}")
-                md.append(f"- 行数：{table['rows']}")
-                md.append(f"- 字段：{', '.join(table['columns'])}")
-                if table["numeric"]:
-                    for field, stats in table["numeric"].items():
-                        md.append(
-                            f"- 数值字段 `{field}`：sum={self._fmt_num(stats['sum'])}, "
-                            f"mean={round(stats['mean'], 2)}, min={self._fmt_num(stats['min'])}, max={self._fmt_num(stats['max'])}"
-                        )
-                else:
-                    md.append("- 未检测到可统计的数值字段。")
+        if budget["top_items"]:
+            for row in budget["top_items"]:
+                md.append(
+                    f"- {row.get('item', 'unknown')}：{self._fmt_num(self._num(row.get('cost')))} "
+                    f"({row.get('category', 'unknown')}，来源 {row.get('_path')})"
+                )
         else:
-            md.append("- 未读取到 CSV 或 TSV 表格。")
+            md.append("- 没有检测到 `cost` 字段，无法形成预算诊断。")
 
         md.extend(
             [
                 "",
-                "## 5. 关键风险与建议",
-                f"- 综合风险等级：{risk_level}",
-                "- 本地小模型的工具调用格式可能不稳定，需要保留规则降级和解析重试机制。",
-                "- GPU 或模型服务可能临时不可用，因此系统需要支持离线规则 Planner。",
-                "- 文件路径、表头或数据格式可能不一致，需要通过路径检查和表格字段校验降低失败概率。",
-                "",
-                "## 6. 证据来源",
+                "## 4. 人员与进度诊断",
+                f"- 总工时：{self._fmt_num(staffing['total'])}",
+                f"- 人员负载：{self._format_mapping(staffing['by_name'])}",
+                f"- 角色分布：{self._format_mapping(staffing['by_role'])}",
+                f"- 平均完成度：{progress['average_completion']}%",
             ]
         )
+        if staffing["overloaded"]:
+            md.append("- 高负载人员：" + "；".join(f"{x['name']} {self._fmt_num(x['hours'])}h" for x in staffing["overloaded"]))
+        if progress["lowest"]:
+            md.append("### 完成度最低的模块")
+            for row in progress["lowest"]:
+                md.append(
+                    f"- {row.get('module', 'unknown')}：{row.get('completion_percent')}%，"
+                    f"负责人 {row.get('owner', 'unknown')}，下一步 {row.get('next_action', '未填写')}"
+                )
+        if progress["blocked"]:
+            md.append("### 阻塞项")
+            for row in progress["blocked"]:
+                md.append(f"- {row.get('module', 'unknown')} 被 `{row.get('blocked_by')}` 阻塞，应优先处理。")
+
+        md.extend(
+            [
+                "",
+                "## 5. 工具可靠性与事故诊断",
+                f"- 工具总体成功率：{tools['overall_success_rate']}%",
+                f"- 事故等级分布：{self._format_mapping(incidents['severity'])}",
+                f"- 事故状态分布：{self._format_mapping(incidents['status'])}",
+            ]
+        )
+        if tools["items"]:
+            md.append("### 工具表现")
+            for row in tools["items"][:6]:
+                md.append(
+                    f"- `{row['tool']}`：调用 {self._fmt_num(row['calls'])} 次，"
+                    f"成功率 {row['success_rate']}%，平均延迟 {self._fmt_num(row['avg_latency_ms'])} ms，用途：{row['main_use']}"
+                )
+        if incidents["open_items"]:
+            md.append("### 未关闭事件")
+            for row in incidents["open_items"]:
+                md.append(f"- {row.get('issue_id')}：{row.get('module')} / {row.get('severity')} / {row.get('action')}")
+
+        md.extend(
+            [
+                "",
+                "## 6. 数据质量与重复上传检查",
+            ]
+        )
+        if duplicate_uploads:
+            md.append("- 检测到以下文件存在重复上传版本，可能导致重复统计：")
+            for name, paths in duplicate_uploads.items():
+                md.append(f"  - {name}: {', '.join(paths)}")
+        else:
+            md.append("- 未发现明显重复上传文件。")
+        md.append("- 建议正式演示前只保留需要分析的一份数据，避免预算、工时和工具调用记录被重复累计。")
+
+        md.extend(["", "## 7. 可执行建议"])
+        for item in analysis["recommendations"]["action_items"]:
+            md.append(f"- {item}")
+        if analysis["recommendations"].get("llm_insights"):
+            md.extend(["", "### LLM 补充洞察"])
+            for item in analysis["recommendations"]["llm_insights"]:
+                if item.strip():
+                    md.append(f"- {item.strip('- ')}")
+
+        md.extend(["", "## 8. 证据来源"])
         for key, vals in evidence.items():
             md.append(f"### {key}")
             if vals:
@@ -233,7 +302,7 @@ class AgentRuntime:
             else:
                 md.append("- 未检索到匹配证据。")
 
-        md.extend(["", "## 7. 召回记忆"])
+        md.extend(["", "## 9. 召回记忆"])
         if memory:
             md.extend(f"- {m.get('kind')}: {m.get('content')}" for m in memory)
         else:
@@ -242,15 +311,19 @@ class AgentRuntime:
         summary = {
             "conversation_id": self.cid,
             "generated_at": generated_at,
+            "decision_mode": analysis["decision_mode"],
+            "llm": analysis["llm"],
             "input_files": input_files,
             "doc_count": len(docs),
             "table_count": len(tables),
             "doc_summaries": doc_summaries,
-            "total_budget_cost": total_cost,
-            "total_staff_hours": total_hours,
+            "total_budget_cost": budget["total"],
+            "total_staff_hours": staffing["total"],
             "risk_level": risk_level,
             "evidence_counts": {k: len(v) for k, v in evidence.items()},
             "table_stats": table_stats,
+            "diagnosis": diagnosis,
+            "recommendations": analysis["recommendations"],
             "tables": tables,
         }
         return {"markdown": "\n".join(md) + "\n", "summary": summary}
@@ -275,5 +348,40 @@ class AgentRuntime:
             }
         return stats
 
-    def _fmt_num(self, value: float) -> str:
-        return str(int(value)) if isinstance(value, float) and value.is_integer() else str(value)
+    def _fact_lines(self, facts: list[dict[str, Any]], empty_text: str) -> list[str]:
+        if not facts:
+            return [f"- {empty_text}"]
+        return [f"- {item['path']}:{item['line']} {item['text']}" for item in facts[:8]]
+
+    def _format_mapping(self, mapping: dict[str, Any]) -> str:
+        if not mapping:
+            return "无"
+        return "；".join(f"{key}={self._fmt_num(value)}" for key, value in mapping.items())
+
+    def _risk_level(self, budget: dict, progress: dict, incidents: dict, duplicate_uploads: dict) -> str:
+        score = 0
+        if budget["total"] >= 12000:
+            score += 2
+        elif budget["total"] >= 6000:
+            score += 1
+        if progress["blocked"]:
+            score += 1
+        if incidents["open_items"]:
+            score += 1
+        if duplicate_uploads:
+            score += 1
+        if score >= 4:
+            return "较高"
+        if score >= 2:
+            return "中等"
+        return "较低"
+
+    def _num(self, value: Any) -> float:
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return 0.0
+
+    def _fmt_num(self, value: Any) -> str:
+        num = self._num(value)
+        return str(int(num)) if num.is_integer() else str(round(num, 2))

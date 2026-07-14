@@ -39,6 +39,7 @@ def table_analyzer(path: str) -> SkillResult:
             "rows": len(rows),
             "columns": reader.fieldnames or [],
             "numeric": numeric,
+            "records": rows[:100],
             "sample": rows[:3],
         })
     except Exception as exc:

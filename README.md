@@ -61,9 +61,9 @@ INIT -> RETRIEVE_MEMORY -> PLAN -> TOOL_CALL
 
 B3 工具层根据任务文本和当前阶段动态选择工具，避免一次性向模型或决策层注入全部工具。工具调用前会校验函数签名，调用后会记录工具名、参数、状态、结果和耗时。
 
-### 4. 本地决策与规则降级
+### 4. 本地决策、分析与规则降级
 
-B4 决策模块包含 Planner 和 Verifier。当前仓库默认使用可复现的本地规则 Planner，便于课程验收和离线运行；后续可以替换为 Qwen、vLLM 或其他本地 LLM 服务。
+B4 决策模块包含 Planner、Analyst 和 Verifier。默认情况下，系统使用可复现的本地规则 Planner + Analyst 生成计划和诊断报告；如果配置了 OpenAI-compatible 本地模型服务，则 Analyst 会调用本地 LLM 生成补充洞察。报告中的 `decision_mode` 会明确标注当前是 `llm` 还是 `rule_fallback`，避免把规则降级结果误认为真实大模型输出。
 
 ### 5. 可信长期记忆
 
@@ -92,7 +92,8 @@ stateweaver_agent_20236533/
 │   ├── schema_compiler.py
 │   ├── tool_router.py
 │   └── executor.py
-├── b4_decision/             # B4 Planner / Verifier 决策模块
+├── b4_decision/             # B4 Planner / Analyst / Verifier 决策模块
+│   ├── analyst.py
 │   ├── planner.py
 │   └── verifier.py
 ├── b5_memory/               # B5 长期记忆模块
@@ -217,6 +218,18 @@ configs/runtime_input.json
 
 修改 `user_input`、`allowed_files` 和 `output_requirements` 后，可以让 Agent 处理新的本地文档和表格任务。Web 控制台也支持直接选择本地文件，文件会被复制到项目内 `uploads/` 目录，并自动写入 `allowed_files`。
 
+### 可选：接入真实本地 LLM
+
+默认版本为了保证离线可运行，会使用 `rule_fallback` 决策模式。如果已经启动了 vLLM、Qwen 或其他 OpenAI-compatible 服务，可以通过环境变量启用真实 LLM 分析：
+
+```powershell
+$env:STATEWEAVER_LLM_URL="http://127.0.0.1:8016/v1"
+$env:STATEWEAVER_LLM_MODEL="Qwen3-1.7B"
+python web_server.py
+```
+
+启用后，报告中的决策模式会显示为 `llm`，并记录 LLM 调用耗时；如果模型服务不可用，系统会自动降级为 `rule_fallback` 并在报告里写明原因。
+
 ## 输出文件说明
 
 | 文件 | 作用 |
@@ -333,10 +346,12 @@ B3 是模型意图到真实工具执行之间的桥接层。
 
 - 根据任务配置生成计划
 - 定义执行步骤
+- 对文档、表格、风险、人员、进度和工具可靠性进行诊断分析
+- 可选调用 OpenAI-compatible 本地 LLM 生成补充洞察
 - 验证输出文件是否存在
 - 判断运行结果是否满足要求
 
-当前默认实现为本地规则 Planner，便于离线可复现运行。后续可以替换为本地 LLM Planner。
+当前默认实现为本地规则 Planner + Analyst，便于离线可复现运行。配置 `STATEWEAVER_LLM_URL` 后，Analyst 会尝试调用本地 LLM；调用失败时自动降级，并将失败原因写入 Summary 和报告。
 
 ### B5 可信长期记忆系统
 
@@ -424,7 +439,7 @@ StateWeaver web UI: http://127.0.0.1:8066
 
 ### 可以接入真实本地大模型吗？
 
-可以。当前 B4 是规则 Planner，主要用于课程验收和离线复现。后续可以在 `b4_decision/` 中增加 Qwen、vLLM 或 OpenAI-compatible API 调用，将 Planner / Executor / Verifier 替换为模型驱动版本。
+可以。B4 Analyst 已经预留 OpenAI-compatible 调用。设置 `STATEWEAVER_LLM_URL` 和 `STATEWEAVER_LLM_MODEL` 后重新启动 `web_server.py` 即可。如果没有设置这些变量，系统会显示 `rule_fallback`，运行会非常快，这是规则分析器在工作，不是大模型在思考。
 
 ### 是否需要 GPU？
 
