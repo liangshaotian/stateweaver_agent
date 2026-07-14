@@ -505,9 +505,9 @@
       </div>
       <div class="body">
         <div class="status-grid">
-          <div class="metric"><strong id="budgetMetric">-</strong><span>预算总额</span></div>
-          <div class="metric"><strong id="hoursMetric">-</strong><span>人员工时</span></div>
-          <div class="metric"><strong id="riskMetric">-</strong><span>风险等级</span></div>
+          <div class="metric"><strong id="budgetMetric">-</strong><span>输入文件</span></div>
+          <div class="metric"><strong id="hoursMetric">-</strong><span>数据表</span></div>
+          <div class="metric"><strong id="riskMetric">-</strong><span>决策模式</span></div>
           <div class="metric"><strong id="traceMetric">-</strong><span>Trace记录</span></div>
         </div>
         <div class="pipeline" id="pipeline"></div>
@@ -521,7 +521,7 @@
             <ul>
               <li>生成 report.md 与 summary.json</li>
               <li>trace 包含 INIT、PLAN、TOOL_CALL、VERIFY、DONE</li>
-              <li>summary 中预算为 4800，工时为 122</li>
+              <li>summary 记录输入文件、文档数、表格数与决策模式</li>
             </ul>
           </div>
           <div class="card">
@@ -776,9 +776,9 @@
       try {
         const data = await getJSON("/api/file?path=" + encodeURIComponent("outputs/demo_001/summary.json"));
         const summary = JSON.parse(data.content);
-        qs("#budgetMetric").textContent = summary.total_budget_cost ?? "-";
-        qs("#hoursMetric").textContent = summary.total_staff_hours ?? "-";
-        qs("#riskMetric").textContent = summary.risk_level ?? "-";
+        qs("#budgetMetric").textContent = Array.isArray(summary.input_files) ? summary.input_files.length : "-";
+        qs("#hoursMetric").textContent = summary.table_count ?? "-";
+        qs("#riskMetric").textContent = summary.decision_mode ?? "-";
       } catch {
         qs("#budgetMetric").textContent = "-";
         qs("#hoursMetric").textContent = "-";
