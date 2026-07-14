@@ -92,6 +92,13 @@ def trace_records() -> list[dict]:
     return records
 
 
+def latest_run_trace(records: list[dict]) -> list[dict]:
+    for index in range(len(records) - 1, -1, -1):
+        if records[index].get("stage") == "INIT":
+            return records[index:]
+    return records
+
+
 def project_status() -> dict:
     files = {
         "config": "configs/runtime_input.json",
@@ -112,12 +119,16 @@ def project_status() -> dict:
             }
         except Exception as exc:
             file_info[key] = {"path": rel, "exists": False, "size": 0, "error": str(exc)}
-    trace = trace_records()[-20:]
+    all_trace = trace_records()
+    latest_trace = latest_run_trace(all_trace)
+    trace = latest_trace[-20:]
     return {
         "project_root": str(ROOT),
         "status": "ready" if trace else "idle",
         "files": file_info,
         "trace": trace,
+        "trace_count": len(latest_trace),
+        "trace_total_count": len(all_trace),
     }
 
 

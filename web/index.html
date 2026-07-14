@@ -625,7 +625,11 @@
     }
     function renderTrace(trace) {
       traceView.innerHTML = "";
-      trace.slice().reverse().forEach(r => {
+      if (!trace.length) {
+        traceView.innerHTML = '<div class="trace-item"><span class="badge">EMPTY</span><span>当前没有可显示的轨迹记录。</span></div>';
+        return;
+      }
+      trace.forEach(r => {
         const item = document.createElement("div");
         item.className = "trace-item";
         const payload = {...r};
@@ -634,6 +638,35 @@
         item.innerHTML = `<span class="badge">${r.stage}</span><span>${r.ts || ""}<br>${escapeHtml(JSON.stringify(payload, null, 2))}</span>`;
         traceView.appendChild(item);
       });
+    }
+    function parseTraceContent(content) {
+      const records = [];
+      content.split(/\r?\n/).forEach((line, index) => {
+        const text = line.trim();
+        if (!text) return;
+        try {
+          records.push(JSON.parse(text));
+        } catch (err) {
+          records.push({
+            ts: "",
+            stage: "PARSE_ERROR",
+            line: index + 1,
+            error: String(err.message || err),
+            raw: text
+          });
+        }
+      });
+      return records;
+    }
+    function latestRunTrace(records) {
+      for (let i = records.length - 1; i >= 0; i -= 1) {
+        if (records[i].stage === "INIT") return records.slice(i);
+      }
+      return records;
+    }
+    async function loadTraceRecords() {
+      const data = await getJSON("/api/file?path=" + encodeURIComponent("traces/demo_001.jsonl"));
+      return latestRunTrace(parseTraceContent(data.content));
     }
     function escapeHtml(s) {
       return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -698,11 +731,17 @@
     async function loadStatus() {
       notify("正在刷新状态...");
       const status = await getJSON("/api/status");
-      renderPipeline(status.trace || []);
+      let fullTrace = [];
+      try {
+        fullTrace = await loadTraceRecords();
+      } catch {
+        fullTrace = status.trace || [];
+      }
+      renderPipeline(fullTrace);
       renderFiles(status);
-      renderTrace(status.trace || []);
-      qs("#traceMetric").textContent = status.trace ? status.trace.length : 0;
-      const init = (status.trace || []).find(r => r.stage === "INIT");
+      renderTrace(fullTrace);
+      qs("#traceMetric").textContent = fullTrace.length;
+      const init = fullTrace.find(r => r.stage === "INIT");
       qs("#toolsetText").textContent = init ? (init.selected_tools || []).join(" / ") : "尚未运行";
       await loadFile(document.querySelector(".tab.active").dataset.file);
       await loadSummaryMetrics();
@@ -719,6 +758,13 @@
       try {
         notify("正在读取 " + path);
         const data = await getJSON("/api/file?path=" + encodeURIComponent(path));
+        if (path.includes("trace")) {
+          const records = latestRunTrace(parseTraceContent(data.content));
+          renderTrace(records);
+          qs("#traceMetric").textContent = records.length;
+          notify("已读取最近一次运行轨迹：" + records.length + " 条");
+          return;
+        }
         fileContent.textContent = data.content;
         notify("已读取 " + path);
       } catch (err) {
