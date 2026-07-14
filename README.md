@@ -230,6 +230,25 @@ python web_server.py
 
 启用后，报告中的决策模式会显示为 `llm`，并记录 LLM 调用耗时；如果模型服务不可用，系统会自动降级为 `rule_fallback` 并在报告里写明原因。
 
+本仓库也提供了一个应急本地模型服务脚本，可直接用 Anaconda 中的 `torch + transformers` 启动小型 Qwen 模型：
+
+```powershell
+cd D:\1自然语言处理实训\stateweaver_agent_20236533
+C:\Users\lenovo\anaconda3\python.exe local_llm_server.py --model Qwen/Qwen2.5-0.5B-Instruct --host 127.0.0.1 --port 8016
+```
+
+另开一个终端启动 Web Console：
+
+```powershell
+$env:STATEWEAVER_LLM_URL="http://127.0.0.1:8016/v1"
+$env:STATEWEAVER_LLM_MODEL="Qwen/Qwen2.5-0.5B-Instruct"
+$env:STATEWEAVER_LLM_TIMEOUT="120"
+$env:STATEWEAVER_LLM_MAX_TOKENS="220"
+C:\Users\lenovo\anaconda3\python.exe web_server.py
+```
+
+这一路线不依赖校园网和远程服务器。首次启动会从 HuggingFace 下载模型权重，之后会使用本机缓存。
+
 ## 输出文件说明
 
 | 文件 | 作用 |

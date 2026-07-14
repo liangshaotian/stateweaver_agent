@@ -19,7 +19,8 @@ class OptionalLLMClient:
         self.base_url = (llm_cfg.get("base_url") or os.getenv("STATEWEAVER_LLM_URL") or "").rstrip("/")
         self.model = llm_cfg.get("model") or os.getenv("STATEWEAVER_LLM_MODEL") or "local-model"
         self.api_key = llm_cfg.get("api_key") or os.getenv("STATEWEAVER_LLM_API_KEY") or ""
-        self.timeout = float(llm_cfg.get("timeout", 8))
+        self.timeout = float(llm_cfg.get("timeout") or os.getenv("STATEWEAVER_LLM_TIMEOUT") or 120)
+        self.max_tokens = int(llm_cfg.get("max_tokens") or os.getenv("STATEWEAVER_LLM_MAX_TOKENS") or 360)
 
     def generate(self, prompt: str) -> dict[str, Any]:
         if not self.enabled or not self.base_url:
@@ -42,7 +43,7 @@ class OptionalLLMClient:
                 {"role": "user", "content": prompt},
             ],
             "temperature": 0.2,
-            "max_tokens": 900,
+            "max_tokens": self.max_tokens,
         }
         headers = {"Content-Type": "application/json"}
         if self.api_key:
