@@ -172,6 +172,16 @@
       font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
       font-size: 12px;
     }
+    .file-list-input {
+      min-height: 96px;
+      font-size: 12px;
+    }
+    .field-help {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
     .check-row {
       display: flex;
       align-items: center;
@@ -433,10 +443,8 @@
           </label>
           <div class="field">
             <span class="field-title">允许读取的文件</span>
-            <label class="check-row"><input type="checkbox" class="fileChoice" value="docs/bid_requirements.md"> 项目需求文档 docs/bid_requirements.md</label>
-            <label class="check-row"><input type="checkbox" class="fileChoice" value="docs/meeting_notes.md"> 组内会议记录 docs/meeting_notes.md</label>
-            <label class="check-row"><input type="checkbox" class="fileChoice" value="data/budget.csv"> 预算表 data/budget.csv</label>
-            <label class="check-row"><input type="checkbox" class="fileChoice" value="data/staff.tsv"> 人员工时表 data/staff.tsv</label>
+            <textarea id="allowedFilesInput" class="file-list-input" spellcheck="false"></textarea>
+            <p class="field-help">每行一个项目内相对路径，例如 docs/xxx.md 或 data/xxx.csv。这里是读取白名单，不在列表中的文件不会被 Agent 读取。</p>
           </div>
           <div class="field">
             <span class="field-title">输出内容</span>
@@ -527,6 +535,7 @@
     const traceView = document.getElementById("traceView");
     const notice = document.getElementById("notice");
     const taskInput = document.getElementById("taskInput");
+    const allowedFilesInput = document.getElementById("allowedFilesInput");
     const maxRoundsInput = document.getElementById("maxRoundsInput");
     const maxToolCallsInput = document.getElementById("maxToolCallsInput");
     const maxSecondsInput = document.getElementById("maxSecondsInput");
@@ -590,8 +599,7 @@
     }
     function applyConfigToSimpleForm(cfg) {
       taskInput.value = cfg.user_input || "";
-      const allowed = new Set(cfg.allowed_files || []);
-      qsa(".fileChoice").forEach(input => input.checked = allowed.has(input.value));
+      allowedFilesInput.value = (cfg.allowed_files || []).join("\n");
       const formats = new Set((cfg.output_requirements && cfg.output_requirements.formats) || []);
       qsa(".formatChoice").forEach(input => input.checked = formats.has(input.value));
       maxRoundsInput.value = cfg.budget?.max_rounds ?? 12;
@@ -609,7 +617,10 @@
       const cfg = readConfigFromEditor();
       cfg.conversation_id = cfg.conversation_id || "demo_001";
       cfg.user_input = taskInput.value.trim();
-      cfg.allowed_files = qsa(".fileChoice").filter(input => input.checked).map(input => input.value);
+      cfg.allowed_files = allowedFilesInput.value
+        .split(/\r?\n/)
+        .map(path => path.trim())
+        .filter(Boolean);
       cfg.output_requirements = cfg.output_requirements || {};
       cfg.output_requirements.formats = qsa(".formatChoice").filter(input => input.checked).map(input => input.value);
       cfg.output_requirements.markdown_path = cfg.output_requirements.markdown_path || "outputs/demo_001/report.md";
@@ -735,7 +746,7 @@
         notify("刷新失败：" + String(err.message || err), true);
       }
     });
-    [taskInput, maxRoundsInput, maxToolCallsInput, maxSecondsInput, ...qsa(".fileChoice"), ...qsa(".formatChoice")].forEach(el => {
+    [taskInput, allowedFilesInput, maxRoundsInput, maxToolCallsInput, maxSecondsInput, ...qsa(".formatChoice")].forEach(el => {
       el.addEventListener("input", syncSimpleFormToEditor);
       el.addEventListener("change", syncSimpleFormToEditor);
     });
