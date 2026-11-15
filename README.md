@@ -1,86 +1,25 @@
-# StateWeaver Agent
+# StateWeaver——基于大语言模型的本地文档与结构化数据分析Agent系统
 
-StateWeaver 是一个面向自然语言处理实训项目的本地工具调用型 Agent 系统。项目以“状态驱动”为核心思想，将任务配置、计划生成、动态工具调用、结果验证、运行轨迹、断点状态和长期记忆组织成一条可追踪的执行链路。
+| 项目信息 | 内容 |
+| :--- | :--- |
+| 所属团队 | NiuTrans（小牛翻译）｜NLP Group |
+| 项目时间 | 2026年4月—2026年7月 |
+| 项目角色 | 项目组长、主要开发者 |
+| 主要开发者 | 梁少天 |
 
-本仓库对应东北大学人工智能 2023 级自然语言处理实训第 16 组项目代码，选题方向为 B 方向 Agent 系统实践。
+StateWeaver 是在小牛翻译 NLP Group 实习期间开展的本地文档与结构化数据分析 Agent 项目，面向需求文档、会议记录及 CSV / TSV 表格的联合分析，支持证据检索、统计计算、报告生成和执行过程追踪。
 
-## 团队分工
+系统以显式状态机组织任务执行，将工具注册与调用、结果验证、断点状态和长期记忆串联起来。支持接入 OpenAI-compatible 本地大语言模型服务；未配置模型时可使用规则降级模式运行示例任务。
 
-| 成员 | 学号 | 工作量 | 主要工作 |
-| :--- | :--- | :--- | :--- |
-| 梁少天 | 20236533 | 70% | 总体架构、B1-B5 核心实现、Verification、Recovery、Web Console 与集成 |
-| 刘广阔 | 20236507 | 10% | B2 Skill 工具函数模块 |
-| 杨金鑫 | 20216424 | 10% | B3 工具说明生成与工具调用模块 |
-| 王渲淏 | 20236512 | 10% | B5 记忆文档存储与查找模块 |
+## 主要职责
 
-## 成员与代码文件对应关系
+作为项目组长、主要开发者，主要负责：
 
-说明：本项目采用统一架构协作方式。梁少天作为组长参与 B1-B5 全部模块的核心设计、主干代码实现、模块联调和最终验收；其他三位成员在对应模块中承担重点子任务，因此下面的代码对应关系表示主要参与范围，不表示该模块由单一成员完全独占。
-
-### 梁少天 20236533
-
-主要负责总体架构、B1-B5 核心设计与主干实现、Verification、Recovery、Web Console、运行入口、模块联调和最终验收。
-
-- 运行入口与集成：
-  - `main.py`
-  - `web_server.py`
-  - `local_llm_server.py`
-- B1 状态驱动 Runtime：
-  - `b1_runtime/runtime.py`
-- B2 工具接口规范与注册联调：
-  - `b2_skills/registry.py`
-  - `b2_skills/skill_spec.py`
-- B3 工具调用链联调：
-  - `b3_tools/schema_compiler.py`
-  - `b3_tools/tool_router.py`
-  - `b3_tools/executor.py`
-- B4 决策、分析与验证：
-  - `b4_decision/planner.py`
-  - `b4_decision/analyst.py`
-  - `b4_decision/verifier.py`
-- B5 记忆接入：
-  - `b5_memory/memory_store.py`
-- Web Console 与验证脚本：
-  - `web/index.html`
-  - `tests/smoke_test.py`
-  - `scripts/benchmark.py`
-
-### 刘广阔 20236507
-
-重点参与 B2 Skill 工具函数模块，包括具体工具实现、工具输入输出规范适配、工具结果封装与异常处理。
-
-- 工具函数实现：
-  - `b2_skills/calculator.py`
-  - `b2_skills/file_reader.py`
-  - `b2_skills/local_file_search.py`
-- 表格与格式工具：
-  - `b2_skills/table_analyzer.py`
-  - `b2_skills/format_converter.py`
-- 证据检查与工具注册：
-  - `b2_skills/evidence_checker.py`
-  - `b2_skills/registry.py`
-  - `b2_skills/skill_spec.py`
-
-### 杨金鑫 20216424
-
-重点参与 B3 工具说明生成与工具调用模块，包括动态工具筛选、Tool Schema 编译、参数校验和工具执行链路。
-
-- Schema 编译与工具路由：
-  - `b3_tools/schema_compiler.py`
-  - `b3_tools/tool_router.py`
-- 工具执行与结果封装：
-  - `b3_tools/executor.py`
-- 与 B2 工具注册结构联调：
-  - `b2_skills/registry.py`
-  - `b2_skills/skill_spec.py`
-
-### 王渲淏 20236512
-
-重点参与 B5 记忆文档存储与查找模块，包括记忆记录结构、相关性检索、任务经验写回与读取。
-
-- 记忆存储与检索：`b5_memory/memory_store.py`
-- 本地记忆文件：`configs/memory.json`
-- Runtime 中的记忆调用接入：`b1_runtime/runtime.py`
+- **总体架构与任务编排**：设计状态驱动 Runtime，完成任务配置、计划执行、工具调用、结果验证与记忆写回的集成。
+- **工具调用框架**：参与核心工具接口、动态 Tool Schema、工具路由及参数校验的设计与主干实现，联调本地文档读取、证据检索及结构化数据分析能力。
+- **分析与验证模块**：实现 Planner / Analyst / Verifier 核心逻辑，对接本地大模型服务，支持规则降级及证据约束输出。
+- **可追踪运行与恢复**：建设 Trace 执行记录、Checkpoint 状态保存及恢复机制，接入长期记忆检索与写回。
+- **交互与交付**：开发命令行入口和 Web Console，完成模块联调、冒烟测试与运行文档整理。
 
 ## 项目概述
 
@@ -154,7 +93,7 @@ B5 Memory 使用本地 JSON 文件保存情景记忆。每条记忆包含内容�
 ## 目录结构
 
 ```text
-stateweaver_agent_20236533/
+stateweaver_agent/
 ├── b1_runtime/              # B1 状态驱动 Runtime
 │   └── runtime.py
 ├── b2_skills/               # B2 Skill 工具函数模块
@@ -311,8 +250,8 @@ python web_server.py
 本仓库也提供了一个应急本地模型服务脚本，可直接用 Anaconda 中的 `torch + transformers` 启动小型 Qwen 模型：
 
 ```powershell
-cd D:\1自然语言处理实训\stateweaver_agent_20236533
-C:\Users\lenovo\anaconda3\python.exe local_llm_server.py --model Qwen/Qwen2.5-0.5B-Instruct --host 127.0.0.1 --port 8016
+cd stateweaver_agent
+python local_llm_server.py --model Qwen/Qwen2.5-0.5B-Instruct --host 127.0.0.1 --port 8016
 ```
 
 另开一个终端启动 Web Console：
@@ -322,7 +261,7 @@ $env:STATEWEAVER_LLM_URL="http://127.0.0.1:8016/v1"
 $env:STATEWEAVER_LLM_MODEL="Qwen/Qwen2.5-0.5B-Instruct"
 $env:STATEWEAVER_LLM_TIMEOUT="120"
 $env:STATEWEAVER_LLM_MAX_TOKENS="220"
-C:\Users\lenovo\anaconda3\python.exe web_server.py
+python web_server.py
 ```
 
 这一路线不依赖校园网和远程服务器。首次启动会从 HuggingFace 下载模型权重，之后会使用本机缓存。
@@ -385,7 +324,7 @@ risk= 中等
 Authorization: Bearer stateweaver-20236533
 ```
 
-注意：当前 Token 仅用于课程 Demo。实际公网部署时应改为环境变量或更安全的认证方式。
+注意：上方 Token 是当前代码使用的本地演示凭证，不是生产密钥。实际公网部署前应改为环境变量或更安全的认证方式。
 
 ## B1-B5 模块说明
 
@@ -544,14 +483,14 @@ StateWeaver web UI: http://127.0.0.1:8066
 
 ## 版本说明
 
-当前版本为课程项目最终展示版，重点保证：
+当前仓库提供可运行的本地分析原型，重点支持：
 
 - 默认 Demo 可直接运行
 - 运行过程可追踪
 - 输出结果可检查
 - Web UI 可交互
-- 代码结构清晰，便于答辩展示
+- 模块结构清晰，便于扩展与维护
 
 ## License
 
-本项目用于课程实训与学习展示，未设置开源许可证。未经作者许可，不建议直接用于商业用途。
+本仓库暂未设置开源许可证；公开可见不等于授予使用、修改或分发许可。如需使用，请联系仓库维护者确认授权。
